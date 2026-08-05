@@ -1,0 +1,1538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>13.1 — Half Marathon Training</title>
+</head>
+<body>
+<style>
+/* ---------------------------------------------------------------
+   Asphalt & hi-vis. Ground is concrete/asphalt, the accent is the
+   safety-vest chartreuse every runner already owns. Numbers are set
+   in mono throughout — split times on a race clock.
+   --------------------------------------------------------------- */
+
+:root {
+  --ground:   #EFF1EA;
+  --surface:  #FBFCF7;
+  --sunken:   #E4E7DC;
+  --ink:      #171B14;
+  --ink-2:    #5A6154;
+  --ink-3:    #878E80;
+  --line:     #DBDFD1;
+  --line-2:   #C6CCB9;
+  --hivis:    #C4E52B;
+  --hivis-in: #171B14;
+  --accent:   #63750A;
+  --cool:     #2F6E7A;
+  --signal:   #C7431B;
+  --shadow:   0 1px 2px rgba(23,27,20,.06), 0 8px 24px -12px rgba(23,27,20,.18);
+  --runner-fill: #14170F;
+  --runner-edge: #FBFCF7;
+
+  --f-mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --f-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  --r: 10px;
+  --pad: clamp(16px, 4vw, 28px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground:   #101208;
+    --surface:  #191C13;
+    --sunken:   #22261A;
+    --ink:      #EDF0E2;
+    --ink-2:    #A0A894;
+    --ink-3:    #757D69;
+    --line:     #2B3021;
+    --line-2:   #3D4430;
+    --hivis:    #C8EA2E;
+    --hivis-in: #101208;
+    --accent:   #C8EA2E;
+    --cool:     #6CC2D2;
+    --signal:   #FF7F52;
+    --shadow:   0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+    --runner-fill: #14170F;
+    --runner-edge: #EDF0E2;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground:   #101208;
+  --surface:  #191C13;
+  --sunken:   #22261A;
+  --ink:      #EDF0E2;
+  --ink-2:    #A0A894;
+  --ink-3:    #757D69;
+  --line:     #2B3021;
+  --line-2:   #3D4430;
+  --hivis:    #C8EA2E;
+  --hivis-in: #101208;
+  --accent:   #C8EA2E;
+  --cool:     #6CC2D2;
+  --signal:   #FF7F52;
+  --shadow:   0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  --runner-fill: #14170F;
+  --runner-edge: #EDF0E2;
+}
+
+:root[data-theme="light"] {
+  --ground:   #EFF1EA;
+  --surface:  #FBFCF7;
+  --sunken:   #E4E7DC;
+  --ink:      #171B14;
+  --ink-2:    #5A6154;
+  --ink-3:    #878E80;
+  --line:     #DBDFD1;
+  --line-2:   #C6CCB9;
+  --hivis:    #C4E52B;
+  --hivis-in: #171B14;
+  --accent:   #63750A;
+  --cool:     #2F6E7A;
+  --signal:   #C7431B;
+  --shadow:   0 1px 2px rgba(23,27,20,.06), 0 8px 24px -12px rgba(23,27,20,.18);
+  --runner-fill: #14170F;
+  --runner-edge: #FBFCF7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--pad) 96px;
+}
+
+/* ---- masthead ---------------------------------------------------- */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  padding: 26px 0 18px;
+}
+.wordmark {
+  font-family: var(--f-mono);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  margin: 0;
+  line-height: 1;
+}
+.wordmark span { color: var(--accent); }
+.masthead .plan-name {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+}
+.countdown {
+  margin-left: auto;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.countdown b {
+  color: var(--ink);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- runner switch ----------------------------------------------- */
+
+.switch {
+  display: flex;
+  gap: 6px;
+  background: var(--sunken);
+  border-radius: 12px;
+  padding: 5px;
+  margin-bottom: 18px;
+}
+.switch button {
+  flex: 1;
+  min-width: 0;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--f-mono);
+  font-size: 13px;
+  letter-spacing: .02em;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background .16s, color .16s;
+}
+.switch button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+.switch button .mi {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+  margin-left: 6px;
+}
+.switch button[aria-pressed="true"] .mi { color: var(--accent); }
+
+/* ---- cards ------------------------------------------------------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  padding: var(--pad);
+  margin-bottom: 16px;
+}
+
+.eyebrow {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 14px;
+}
+
+/* ---- meters ------------------------------------------------------ */
+
+.meters { display: flex; flex-direction: column; gap: 26px; }
+
+.meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;   /* headroom so the runner never collides with the readout */
+}
+.meter-label {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.meter-val {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  color: var(--ink);
+}
+.meter-val .of { color: var(--ink-3); }
+.meter-val .pct { color: var(--accent); margin-left: 8px; }
+
+.track {
+  position: relative;
+  height: 12px;
+  background: var(--sunken);
+  border-radius: 99px;
+  overflow: visible;
+}
+.track::after {           /* lane line down the middle of the road */
+  content: "";
+  position: absolute;
+  inset: 50% 10px auto;
+  height: 1px;
+  transform: translateY(-.5px);
+  background: repeating-linear-gradient(to right, var(--line-2) 0 6px, transparent 6px 14px);
+  opacity: .8;
+}
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 99px;
+  background: var(--hivis);
+  width: 0;
+  transition: width .5s cubic-bezier(.22,.9,.3,1);
+  z-index: 1;
+}
+.meter.is-over .fill { background: linear-gradient(90deg, var(--hivis), var(--cool)); }
+
+.runner-slot {
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  z-index: 2;
+  transform: translateX(-50%);
+  transition: left .5s cubic-bezier(.22,.9,.3,1);
+  pointer-events: none;
+}
+
+.meter-note {
+  margin: 7px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.meter-note b { color: var(--ink-2); font-weight: 600; }
+
+/* the big one */
+.meter-daily .track { height: 18px; }
+.meter-daily .meter-val { font-size: 17px; }
+.meter-daily .meter-head { margin-bottom: 31px; }
+
+/* ---- runner character -------------------------------------------- */
+
+/* The runner stands on the leading edge of the bar, so half of it is over
+   hi-vis fill and half over empty track. A dark fill with a light outline is
+   the only combination that reads against both, in either theme. */
+.runner { display: block; overflow: visible; }
+.runner .lim { transform-box: fill-box; }
+.runner .body-g { transform-box: fill-box; transform-origin: 50% 100%; }
+.runner .torso, .runner .head, .runner .lim { fill: var(--runner-fill); }
+/* Halo the silhouette rather than stroking each shape — a per-shape stroke at
+   this size fattens the limbs until they merge into the torso. */
+.runner .body-g {
+  filter: drop-shadow(0 0 1px var(--runner-edge)) drop-shadow(0 0 1px var(--runner-edge));
+}
+
+.runner .arm-f, .runner .arm-b { transform-origin: 50% 6%; }
+.runner .leg-f, .runner .leg-b { transform-origin: 50% 4%; }
+
+/* running cycle */
+.runner[data-state="run"] .body-g   { animation: bob .42s linear infinite; }
+.runner[data-state="run"] .arm-f    { animation: swingA .42s linear infinite -.05s; }
+.runner[data-state="run"] .arm-b    { animation: swingB .42s linear infinite -.05s; }
+.runner[data-state="run"] .leg-f    { animation: strideA .42s linear infinite; }
+.runner[data-state="run"] .leg-b    { animation: strideB .42s linear infinite; }
+
+@keyframes bob     { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1.6px); } }
+@keyframes swingA  { 0%,100% { transform: rotate(46deg); } 50% { transform: rotate(-50deg); } }
+@keyframes swingB  { 0%,100% { transform: rotate(-50deg); } 50% { transform: rotate(46deg); } }
+@keyframes strideA { 0%,100% { transform: rotate(-38deg); } 50% { transform: rotate(34deg); } }
+@keyframes strideB { 0%,100% { transform: rotate(34deg); } 50% { transform: rotate(-38deg); } }
+
+/* waiting to start */
+.runner[data-state="idle"] .arm-f  { transform: rotate(30deg); }
+.runner[data-state="idle"] .arm-b  { transform: rotate(-26deg); }
+.runner[data-state="idle"] .leg-f  { transform: rotate(15deg); }
+.runner[data-state="idle"] .leg-b  { transform: rotate(-15deg); }
+.runner[data-state="idle"] .body-g { animation: breathe 3.4s ease-in-out infinite; }
+@keyframes breathe { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.8px); } }
+
+/* rest day — sitting it out, and that's the plan */
+.runner[data-state="rest"] .body-g { transform: translateY(2px); animation: breathe 4.4s ease-in-out infinite; }
+.runner[data-state="rest"] .arm-f  { transform: rotate(11deg); }
+.runner[data-state="rest"] .arm-b  { transform: rotate(-9deg); }
+.runner[data-state="rest"] .leg-f  { transform: rotate(6deg); }
+.runner[data-state="rest"] .leg-b  { transform: rotate(-6deg); }
+.runner[data-state="rest"] .torso, .runner[data-state="rest"] .head,
+.runner[data-state="rest"] .lim    { fill: var(--ink-3); }
+
+/* goal met — switches to the signal colour so it still reads while standing
+   on a completely hi-vis bar */
+.runner[data-state="done"] .torso,
+.runner[data-state="done"] .lim,
+.runner[data-state="done"] .head { fill: var(--signal); }
+.runner[data-state="done"] .arm-f { transform: rotate(119deg); }
+.runner[data-state="done"] .arm-b { transform: rotate(-119deg); }
+.runner[data-state="done"] .leg-f { transform: rotate(12deg); }
+.runner[data-state="done"] .leg-b { transform: rotate(-12deg); }
+
+/* the celebration */
+.runner.cheer .body-g { animation: leap .62s cubic-bezier(.3,1.5,.5,1) 3; }
+.runner.cheer .arm-f  { animation: cheerA .31s ease-in-out 6; }
+.runner.cheer .arm-b  { animation: cheerB .31s ease-in-out 6; }
+.runner.cheer .leg-f  { animation: kickA .31s ease-in-out 6; }
+.runner.cheer .leg-b  { animation: kickB .31s ease-in-out 6; }
+@keyframes leap   { 0%,100% { transform: translateY(0) scaleY(1); } 18% { transform: translateY(1px) scaleY(.86); } 55% { transform: translateY(-11px) scaleY(1.06); } }
+@keyframes cheerA { 0%,100% { transform: rotate(107deg); } 50% { transform: rotate(131deg); } }
+@keyframes cheerB { 0%,100% { transform: rotate(-131deg); } 50% { transform: rotate(-107deg); } }
+@keyframes kickA  { 0%,100% { transform: rotate(24deg); } 50% { transform: rotate(-6deg); } }
+@keyframes kickB  { 0%,100% { transform: rotate(-24deg); } 50% { transform: rotate(6deg); } }
+
+/* ---- confetti ---------------------------------------------------- */
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  overflow: hidden;
+}
+.bit {
+  position: absolute;
+  width: 7px;
+  height: 11px;
+  border-radius: 1.5px;
+  will-change: transform, opacity;
+  animation: fly var(--dur) cubic-bezier(.15,.6,.4,1) forwards;
+}
+@keyframes fly {
+  0%   { transform: translate3d(0,0,0) rotate(0deg); opacity: 1; }
+  100% { transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot)); opacity: 0; }
+}
+
+/* ---- toast ------------------------------------------------------- */
+
+.toast-layer {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  pointer-events: none;
+  width: min(440px, calc(100vw - 32px));
+}
+.toast {
+  background: var(--hivis);
+  color: var(--hivis-in);
+  border-radius: 99px;
+  padding: 11px 20px;
+  font-family: var(--f-mono);
+  font-size: 13px;
+  letter-spacing: .01em;
+  text-align: center;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,.5);
+  animation: pop .3s cubic-bezier(.2,1.4,.4,1) both, fade .4s 3.2s forwards;
+}
+@keyframes pop  { from { transform: translateY(14px) scale(.94); opacity: 0; } }
+@keyframes fade { to { transform: translateY(-6px); opacity: 0; } }
+
+/* ---- today / selected day ---------------------------------------- */
+
+.day-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.day-title {
+  font-family: var(--f-mono);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  margin: 0;
+  line-height: 1.2;
+}
+.day-when {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 5px;
+}
+.tag {
+  display: inline-block;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 99px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.tag-run   { color: var(--accent); }
+.tag-cross { color: var(--cool); }
+.tag-rest  { color: var(--ink-3); }
+.tag-race  { color: var(--signal); }
+
+.logger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.stepper {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--line-2);
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--ground);
+}
+.stepper button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--f-mono);
+  font-size: 19px;
+  width: 42px;
+  cursor: pointer;
+  transition: background .14s, color .14s;
+}
+.stepper button:hover { background: var(--sunken); color: var(--ink); }
+.stepper input {
+  appearance: none;
+  -moz-appearance: textfield;
+  border: 0;
+  border-left: 1px solid var(--line-2);
+  border-right: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 19px;
+  text-align: center;
+  width: 88px;
+  padding: 10px 4px;
+}
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.unit {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.btn {
+  appearance: none;
+  font-family: var(--f-mono);
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  padding: 11px 18px;
+  border-radius: 9px;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .14s, border-color .14s, transform .1s;
+}
+.btn:hover { background: var(--sunken); }
+.btn:active { transform: translateY(1px); }
+.btn-go {
+  background: var(--hivis);
+  border-color: var(--hivis);
+  color: var(--hivis-in);
+  font-weight: 700;
+}
+.btn-go:hover { background: var(--hivis); filter: brightness(1.06); }
+.btn-quiet { border-color: transparent; background: transparent; color: var(--ink-3); padding-left: 8px; padding-right: 8px; }
+.btn-quiet:hover { background: var(--sunken); color: var(--ink-2); }
+.btn[aria-pressed="true"] { background: var(--hivis); border-color: var(--hivis); color: var(--hivis-in); }
+
+.logger .spacer { margin-left: auto; }
+
+/* ---- week strip -------------------------------------------------- */
+
+.strip-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.strip-head .eyebrow { margin: 0; }
+.wk-nav { display: flex; gap: 4px; }
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+.chip {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--ground);
+  border-radius: 9px;
+  padding: 9px 3px 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  transition: border-color .14s, background .14s, transform .1s;
+}
+.chip:hover { border-color: var(--line-2); }
+.chip:active { transform: translateY(1px); }
+.chip-d {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.chip-m {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+.chip-sub { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-3); line-height: 1; white-space: nowrap; }
+.dot { width: 6px; height: 6px; border-radius: 99px; background: var(--line-2); }
+
+.chip[data-kind="rest"] .chip-m { color: var(--ink-3); font-weight: 400; }
+.chip[data-kind="cross"] .chip-m { color: var(--cool); }
+.chip[data-kind="race"] .chip-m { color: var(--signal); }
+.chip.met { background: color-mix(in srgb, var(--hivis) 16%, var(--ground)); border-color: color-mix(in srgb, var(--hivis) 45%, var(--line)); }
+.chip.met .dot { background: var(--hivis); }
+.chip.partial .dot { background: var(--ink-2); }
+.chip.sel { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.chip.today .chip-d { color: var(--accent); font-weight: 700; }
+
+/* ---- full plan --------------------------------------------------- */
+
+.plan-scroll { overflow-x: auto; margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad); }
+table.plan {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-family: var(--f-mono);
+  font-size: 12px;
+}
+table.plan th, table.plan td {
+  padding: 8px 6px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+table.plan thead th {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 400;
+  border-bottom-color: var(--line-2);
+}
+table.plan th.wk, table.plan td.wk { text-align: left; color: var(--ink-3); }
+table.plan td.total { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+table.plan tr.now { background: color-mix(in srgb, var(--hivis) 10%, transparent); }
+table.plan tr.now td.wk { color: var(--accent); font-weight: 700; }
+table.plan td.d { color: var(--ink); cursor: pointer; }
+table.plan td.d:hover { background: var(--sunken); }
+table.plan td.d.rest { color: var(--ink-3); }
+table.plan td.d.cross { color: var(--cool); }
+table.plan td.d.race { color: var(--signal); font-weight: 700; }
+table.plan td.d.met { color: var(--accent); font-weight: 700; }
+table.plan td.d.met::after { content: " ✓"; }
+table.plan tfoot td { border-bottom: 0; padding-top: 12px; color: var(--ink-2); font-weight: 700; }
+
+/* ---- both-runners row -------------------------------------------- */
+
+.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.vs-cell { background: var(--ground); border: 1px solid var(--line); border-radius: 9px; padding: 13px 14px; min-width: 0; }
+.vs-name {
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-3); margin: 0 0 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.vs-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--f-mono); font-size: 12px; }
+.vs-row + .vs-row { margin-top: 5px; }
+.vs-row .k { color: var(--ink-3); }
+.vs-row .v { font-variant-numeric: tabular-nums; color: var(--ink); }
+.mini-track { height: 5px; background: var(--sunken); border-radius: 99px; overflow: hidden; margin-top: 10px; }
+.mini-fill { height: 100%; background: var(--hivis); border-radius: 99px; transition: width .5s ease; }
+
+/* ---- settings ---------------------------------------------------- */
+
+details.setup { border-top: 1px solid var(--line); margin-top: 4px; }
+details.setup > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 0 0;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+details.setup > summary::-webkit-details-marker { display: none; }
+details.setup > summary::before { content: "+ "; }
+details.setup[open] > summary::before { content: "– "; }
+details.setup > summary:hover { color: var(--ink-2); }
+
+.field { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+.field label {
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-3); flex: 0 0 120px;
+}
+.field input[type="text"], .field input[type="date"] {
+  flex: 1 1 180px;
+  min-width: 0;
+  font-family: var(--f-mono);
+  font-size: 13.5px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  background: var(--ground);
+  color: var(--ink);
+}
+.hint { font-size: 12.5px; color: var(--ink-3); margin: 14px 0 0; line-height: 1.55; }
+textarea.sync {
+  width: 100%;
+  height: 92px;
+  margin-top: 10px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  background: var(--ground);
+  color: var(--ink-2);
+  resize: vertical;
+}
+
+.colophon {
+  font-size: 12px;
+  color: var(--ink-3);
+  line-height: 1.6;
+  margin: 26px 0 0;
+  text-align: center;
+}
+.colophon a { color: var(--ink-2); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+@media (max-width: 560px) {
+  .wordmark { font-size: 25px; }
+  .countdown { margin-left: 0; width: 100%; }
+  .versus { grid-template-columns: 1fr; }
+  .field label { flex-basis: 100%; }
+  .stepper input { width: 74px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <h1 class="wordmark">13<span>.</span>1</h1>
+      <p class="plan-name">Hal Higdon · Novice 1 · 12 weeks</p>
+    </div>
+    <div class="countdown" id="countdown"></div>
+  </header>
+
+  <div class="switch" id="switch" role="group" aria-label="Choose runner"></div>
+
+  <!-- the three bars -->
+  <section class="card">
+    <div class="meters">
+
+      <div class="meter meter-daily" id="m-day">
+        <div class="meter-head">
+          <span class="meter-label">Today</span>
+          <span class="meter-val" id="v-day"></span>
+        </div>
+        <div class="track">
+          <div class="fill" id="f-day"></div>
+          <div class="runner-slot" id="r-day"></div>
+        </div>
+        <p class="meter-note" id="n-day"></p>
+      </div>
+
+      <div class="meter" id="m-week">
+        <div class="meter-head">
+          <span class="meter-label" id="l-week">This week</span>
+          <span class="meter-val" id="v-week"></span>
+        </div>
+        <div class="track">
+          <div class="fill" id="f-week"></div>
+          <div class="runner-slot" id="r-week"></div>
+        </div>
+        <p class="meter-note" id="n-week"></p>
+      </div>
+
+      <div class="meter" id="m-all">
+        <div class="meter-head">
+          <span class="meter-label">All 12 weeks</span>
+          <span class="meter-val" id="v-all"></span>
+        </div>
+        <div class="track">
+          <div class="fill" id="f-all"></div>
+          <div class="runner-slot" id="r-all"></div>
+        </div>
+        <p class="meter-note" id="n-all"></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- selected day -->
+  <section class="card">
+    <div class="day-head">
+      <div>
+        <p class="day-when" id="d-when"></p>
+        <h2 class="day-title" id="d-title"></h2>
+      </div>
+      <span class="tag" id="d-tag"></span>
+    </div>
+    <div class="logger" id="logger"></div>
+  </section>
+
+  <!-- week strip -->
+  <section class="card">
+    <div class="strip-head">
+      <p class="eyebrow" id="strip-label"></p>
+      <div class="wk-nav">
+        <button class="btn btn-quiet" id="wk-prev" aria-label="Previous week">←</button>
+        <button class="btn btn-quiet" id="wk-today">Today</button>
+        <button class="btn btn-quiet" id="wk-next" aria-label="Next week">→</button>
+      </div>
+    </div>
+    <div class="strip" id="strip"></div>
+  </section>
+
+  <!-- both runners -->
+  <section class="card">
+    <p class="eyebrow">Both of you</p>
+    <div class="versus" id="versus"></div>
+  </section>
+
+  <!-- full plan -->
+  <section class="card">
+    <p class="eyebrow">The whole plan · tap any day to log it</p>
+    <div class="plan-scroll">
+      <table class="plan" id="plan-table"></table>
+    </div>
+
+    <details class="setup">
+      <summary>Setup &amp; sync</summary>
+
+      <div class="field">
+        <label for="in-start">Week 1 Monday</label>
+        <input type="date" id="in-start">
+      </div>
+      <div class="field">
+        <label for="in-n1">Runner 1</label>
+        <input type="text" id="in-n1" maxlength="24" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="in-n2">Runner 2</label>
+        <input type="text" id="in-n2" maxlength="24" autocomplete="off">
+      </div>
+
+      <p class="hint">
+        Everything saves to this browser only — nothing is uploaded anywhere. To get both of you onto
+        one phone's history, copy the code below and paste it into the other phone, then press Load.
+      </p>
+      <textarea class="sync" id="sync-box" spellcheck="false" aria-label="Sync code"></textarea>
+      <div class="logger" style="border-top:0; padding-top:10px; margin-top:0;">
+        <button class="btn" id="b-copy">Copy code</button>
+        <button class="btn" id="b-load">Load pasted code</button>
+        <button class="btn btn-quiet spacer" id="b-reset">Erase everything</button>
+      </div>
+    </details>
+  </section>
+
+  <p class="colophon">
+    Schedule from Hal Higdon's Novice 1 half marathon program.<br>
+    206.4 miles between Week 1 Monday and the finish line.
+  </p>
+
+</div>
+
+<div class="confetti-layer" id="confetti"></div>
+<div class="toast-layer" id="toasts"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =====================================================================
+     THE PLAN — Hal Higdon, Novice 1 Half Marathon, 12 weeks.
+     Mon rest · Tue/Wed/Thu runs · Fri rest · Sat cross · Sun long run.
+     t: rest | run | opt (run-or-cross) | cross | easy (rest or easy run) | race
+     m = planned miles, min = planned cross-training minutes
+     ===================================================================== */
+
+  var R    = { t: "rest" };
+  var run  = function (m) { return { t: "run", m: m }; };
+  var opt  = function (m) { return { t: "opt", m: m }; };
+  var xt   = function (min) { return { t: "cross", min: min }; };
+  var easy = { t: "easy" };
+
+  var PLAN = [
+    [R, run(3),   opt(2), run(3),   R, xt(30), run(4)],
+    [R, run(3),   opt(2), run(3),   R, xt(30), run(4)],
+    [R, run(3.5), opt(2), run(3.5), R, xt(40), run(5)],
+    [R, run(3.5), opt(2), run(3.5), R, xt(40), run(5)],
+    [R, run(4),   opt(2), run(4),   R, xt(40), run(6)],
+    [R, run(4),   opt(2), run(4),   R, easy,   { t: "race", m: 3.1,  name: "5-K Race" }],
+    [R, run(4.5), opt(3), run(4.5), R, xt(50), run(7)],
+    [R, run(4.5), opt(3), run(4.5), R, xt(50), run(8)],
+    [R, run(5),   opt(3), run(5),   R, easy,   { t: "race", m: 6.2,  name: "10-K Race" }],
+    [R, run(5),   opt(3), run(5),   R, xt(60), run(9)],
+    [R, run(5),   opt(3), run(5),   R, xt(60), run(10)],
+    [R, run(4),   opt(3), run(2),   R, R,      { t: "race", m: 13.1, name: "Half Marathon" }]
+  ];
+
+  var DAYS  = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  var LONG  = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  var MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  function goalOf(e)   { return e.m || 0; }
+  function weekGoal(w) { return PLAN[w].reduce(function (s, e) { return s + goalOf(e); }, 0); }
+
+  var TOTAL = PLAN.reduce(function (s, _, i) { return s + weekGoal(i); }, 0);   // 206.4
+
+  function labelOf(e) {
+    if (e.t === "rest")  return "Rest";
+    if (e.t === "easy")  return "Rest or easy run";
+    if (e.t === "cross") return e.min + " min cross";
+    if (e.t === "race")  return e.name;
+    if (e.t === "opt")   return e.m + " mi run or cross";
+    return e.m + " mi run";
+  }
+  function shortOf(e) {
+    if (e.t === "rest")  return "rest";
+    if (e.t === "easy")  return "easy";
+    if (e.t === "cross") return e.min + "m";
+    if (e.t === "race")  return e.m;
+    return e.m;
+  }
+  function kindOf(e) {
+    if (e.t === "race")  return "race";
+    if (e.t === "cross") return "cross";
+    if (e.t === "rest" || e.t === "easy") return "rest";
+    return "run";
+  }
+
+  /* =====================================================================
+     STATE
+     ===================================================================== */
+
+  var KEY = "higdon-novice1-v1";
+
+  function mondayOfThisWeek() {
+    var d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    return iso(d);
+  }
+  function iso(d) {
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function parseISO(s) {
+    var p = String(s || "").split("-");
+    return new Date(+p[0], +p[1] - 1, +p[2]);
+  }
+
+  function blankRunner(name) {
+    return { name: name, log: {}, cheered: {} };
+  }
+  function freshState() {
+    return {
+      start: mondayOfThisWeek(),
+      active: 0,
+      runners: [blankRunner("Me"), blankRunner("Husband")]
+    };
+  }
+
+  var S = load();
+  var viewWeek = 0;      // week index currently shown in the strip
+  var selDay   = 0;      // day index within viewWeek
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return freshState();
+      var s = JSON.parse(raw);
+      if (!s || !Array.isArray(s.runners) || s.runners.length !== 2) return freshState();
+      s.runners.forEach(function (r) {
+        if (!r.log) r.log = {};
+        if (!r.cheered) r.cheered = {};
+      });
+      if (!s.start) s.start = mondayOfThisWeek();
+      s.active = s.active === 1 ? 1 : 0;
+      return s;
+    } catch (e) {
+      return freshState();
+    }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  }
+
+  function me() { return S.runners[S.active]; }
+  function entryFor(r, w, d) { return r.log[w + ":" + d] || null; }
+  function milesFor(r, w, d) { var e = entryFor(r, w, d); return e && e.mi ? e.mi : 0; }
+  function doneFor(r, w, d)  { var e = entryFor(r, w, d); return !!(e && e.done); }
+
+  function totalMiles(r) {
+    var t = 0;
+    for (var k in r.log) if (r.log[k] && r.log[k].mi) t += r.log[k].mi;
+    return t;
+  }
+  function weekMiles(r, w) {
+    var t = 0;
+    for (var d = 0; d < 7; d++) t += milesFor(r, w, d);
+    return t;
+  }
+
+  /* Where are we in the plan today? Returns {w, d, before, after, dayIndex} */
+  function position() {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var start = parseISO(S.start); start.setHours(0, 0, 0, 0);
+    var i = Math.round((today - start) / 86400000);
+    return {
+      dayIndex: i,
+      w: Math.max(0, Math.min(11, Math.floor(i / 7))),
+      d: ((i % 7) + 7) % 7,
+      before: i < 0,
+      after: i > 83
+    };
+  }
+  function dateOf(w, d) {
+    var s = parseISO(S.start);
+    s.setDate(s.getDate() + w * 7 + d);
+    return s;
+  }
+  function isToday(w, d) {
+    var p = position();
+    return !p.before && !p.after && p.w === w && p.d === d;
+  }
+
+  /* =====================================================================
+     THE LITTLE GUY
+     ===================================================================== */
+
+  function runnerSVG(scale) {
+    var s = scale || 1;
+    /* Narrow torso, long limbs pivoting from shoulder and hip — the limbs have
+       to swing clear of the torso or the silhouette reads as a blob. */
+    return '' +
+      '<svg class="runner" width="' + (28 * s) + '" height="' + (36 * s) + '" viewBox="0 0 28 36" data-state="idle" aria-hidden="true">' +
+        '<g class="body-g">' +
+          '<rect class="lim arm-b" x="12.7" y="11.4" width="2.4" height="9.6" rx="1.2"/>' +
+          '<rect class="lim leg-b" x="12.4" y="20"   width="2.9" height="13"  rx="1.45"/>' +
+          '<rect class="torso" x="11.9" y="10" width="4.2" height="11.4" rx="2.1"/>' +
+          '<rect class="lim leg-f" x="12.4" y="20"   width="2.9" height="13"  rx="1.45"/>' +
+          '<rect class="lim arm-f" x="12.7" y="11.4" width="2.4" height="9.6" rx="1.2"/>' +
+          '<circle class="head" cx="14" cy="5.6" r="4.1"/>' +
+        '</g>' +
+      '</svg>';
+  }
+
+  /* Drop the character into each bar once, at load. */
+  document.getElementById("r-day").innerHTML  = runnerSVG(1);
+  document.getElementById("r-week").innerHTML = runnerSVG(0.6);
+  document.getElementById("r-all").innerHTML  = runnerSVG(0.6);
+
+  function setRunner(slotId, state, cheer) {
+    var el = document.getElementById(slotId).querySelector(".runner");
+    if (!el) return;
+    el.setAttribute("data-state", state);
+    if (cheer) {
+      el.classList.remove("cheer");
+      void el.offsetWidth;           // restart the animation
+      el.classList.add("cheer");
+      setTimeout(function () { el.classList.remove("cheer"); }, 2200);
+    }
+  }
+
+  function confetti(n) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var layer  = document.getElementById("confetti");
+    var colors = ["#C4E52B", "#8FBF1E", "#2F6E7A", "#E0552B", "#EDF0E2"];
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight * 0.34;
+    for (var i = 0; i < n; i++) {
+      var b = document.createElement("div");
+      b.className = "bit";
+      var ang  = (Math.random() * Math.PI * 2);
+      var dist = 90 + Math.random() * 260;
+      b.style.left = cx + "px";
+      b.style.top  = cy + "px";
+      b.style.background = colors[i % colors.length];
+      b.style.setProperty("--dx",  Math.cos(ang) * dist + "px");
+      b.style.setProperty("--dy",  (Math.sin(ang) * dist + 220 + Math.random() * 160) + "px");
+      b.style.setProperty("--rot", (Math.random() * 900 - 450) + "deg");
+      b.style.setProperty("--dur", (1100 + Math.random() * 900) + "ms");
+      layer.appendChild(b);
+      (function (node) { setTimeout(function () { node.remove(); }, 2200); })(b);
+    }
+  }
+
+  function toast(msg) {
+    var t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    document.getElementById("toasts").appendChild(t);
+    setTimeout(function () { t.remove(); }, 3800);
+  }
+
+  var DAY_CHEERS = [
+    "Today's miles: done. ✓",
+    "That's the day. Nicely run.",
+    "Goal hit — go stretch.",
+    "Banked it. See you tomorrow."
+  ];
+  var WEEK_CHEERS = [
+    "Full week, every mile. 🏃",
+    "Week complete. That's how it's built.",
+    "Weekly goal cleared."
+  ];
+
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  /* =====================================================================
+     RENDER
+     ===================================================================== */
+
+  function fmt(n) {
+    return (Math.round(n * 10) / 10).toFixed(1).replace(/\.0$/, "");
+  }
+
+  function render(opts) {
+    opts = opts || {};
+    var r = me();
+    var p = position();
+
+    /* --- countdown ------------------------------------------------- */
+    var race = dateOf(11, 6);
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var togo = Math.round((race - today) / 86400000);
+    var cd = document.getElementById("countdown");
+    if (togo > 0) {
+      cd.innerHTML = "<b>" + togo + "</b> day" + (togo === 1 ? "" : "s") + " to race day · " +
+                     MONTH[race.getMonth()] + " " + race.getDate();
+    } else if (togo === 0) {
+      cd.innerHTML = "<b>Race day.</b> Go get it.";
+    } else {
+      cd.innerHTML = "Race day was " + MONTH[race.getMonth()] + " " + race.getDate();
+    }
+
+    /* --- runner switch --------------------------------------------- */
+    var sw = document.getElementById("switch");
+    sw.innerHTML = "";
+    S.runners.forEach(function (rr, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-pressed", i === S.active ? "true" : "false");
+      b.innerHTML = esc(rr.name) + '<span class="mi">' + fmt(totalMiles(rr)) + " mi</span>";
+      b.onclick = function () { S.active = i; save(); render(); };
+      sw.appendChild(b);
+    });
+
+    /* --- the three bars -------------------------------------------- */
+    var todayW = p.before ? 0 : p.w;
+    var todayD = p.before ? 0 : p.d;
+    var tEntry = PLAN[todayW][todayD];
+    var tGoal  = goalOf(tEntry);
+    var tDone  = milesFor(r, todayW, todayD);
+    var tRatio = tGoal > 0 ? tDone / tGoal : (doneFor(r, todayW, todayD) || tDone > 0 ? 1 : 0);
+
+    bar("day", tRatio, tGoal > 0 ? fmt(tDone) + '<span class="of"> / ' + fmt(tGoal) + " mi</span>"
+                                 : (tRatio >= 1 ? "Done" : labelOf(tEntry)));
+    var dayState = tGoal === 0 ? (tRatio >= 1 ? "done" : "rest")
+                 : tRatio >= 1 ? "done" : tRatio > 0 ? "run" : "idle";
+    setRunner("r-day", dayState, opts.cheer === "day");
+    document.getElementById("n-day").innerHTML =
+      p.before ? "Plan starts " + MONTH[parseISO(S.start).getMonth()] + " " + parseISO(S.start).getDate() + "."
+      : p.after ? "Plan finished. Every mile logged still counts below."
+      : "<b>" + LONG[todayD] + "</b> · Week " + (todayW + 1) + " · " + labelOf(tEntry);
+
+    var wGoal = weekGoal(todayW);
+    var wDone = weekMiles(r, todayW);
+    bar("week", wGoal > 0 ? wDone / wGoal : 0,
+        fmt(wDone) + '<span class="of"> / ' + fmt(wGoal) + " mi</span>");
+    document.getElementById("l-week").textContent = "Week " + (todayW + 1) + " of 12";
+    setRunner("r-week", wDone >= wGoal ? "done" : wDone > 0 ? "run" : "idle", opts.cheer === "week");
+    var wLeft = wGoal - wDone;
+    document.getElementById("n-week").innerHTML = wLeft > 0.05
+      ? "<b>" + fmt(wLeft) + " mi</b> left this week"
+      : "Week complete.";
+
+    var aDone = totalMiles(r);
+    bar("all", aDone / TOTAL, fmt(aDone) + '<span class="of"> / ' + fmt(TOTAL) + " mi</span>");
+    setRunner("r-all", aDone >= TOTAL ? "done" : aDone > 0 ? "run" : "idle", opts.cheer === "all");
+    document.getElementById("n-all").innerHTML = aDone >= TOTAL
+      ? "Every mile in the plan. 🏅"
+      : "<b>" + fmt(TOTAL - aDone) + " mi</b> to go across the whole plan";
+
+    renderDay();
+    renderStrip();
+    renderVersus();
+    renderTable();
+
+    document.getElementById("in-start").value = S.start;
+    document.getElementById("in-n1").value = S.runners[0].name;
+    document.getElementById("in-n2").value = S.runners[1].name;
+  }
+
+  function bar(id, ratio, valHTML) {
+    var pct = Math.max(0, Math.min(1, ratio));
+    document.getElementById("f-" + id).style.width = (pct * 100) + "%";
+    document.getElementById("r-" + id).style.left  = (pct * 100) + "%";
+    document.getElementById("m-" + id).classList.toggle("is-over", ratio > 1.001);
+    document.getElementById("v-" + id).innerHTML =
+      valHTML + '<span class="pct">' + Math.round(ratio * 100) + "%</span>";
+  }
+
+  /* --- selected day card ------------------------------------------- */
+
+  function renderDay() {
+    var r = me();
+    var e = PLAN[viewWeek][selDay];
+    var d = dateOf(viewWeek, selDay);
+    var goal = goalOf(e);
+    var logged = milesFor(r, viewWeek, selDay);
+    var done = doneFor(r, viewWeek, selDay);
+
+    document.getElementById("d-when").textContent =
+      (isToday(viewWeek, selDay) ? "Today · " : "") +
+      LONG[selDay] + " · " + MONTH[d.getMonth()] + " " + d.getDate() +
+      " · Week " + (viewWeek + 1);
+    document.getElementById("d-title").textContent = labelOf(e);
+
+    var tag = document.getElementById("d-tag");
+    var k = kindOf(e);
+    tag.className = "tag tag-" + k;
+    tag.textContent = k === "race" ? "Race" : k === "cross" ? "Cross-train" : k === "rest" ? "Recover" : "Run";
+
+    var box = document.getElementById("logger");
+    box.innerHTML = "";
+
+    if (goal > 0) {
+      var wrapEl = document.createElement("div");
+      wrapEl.className = "stepper";
+      wrapEl.innerHTML =
+        '<button type="button" aria-label="Subtract a quarter mile">–</button>' +
+        '<input type="number" inputmode="decimal" step="0.1" min="0" max="99" value="' + (logged || "") + '" placeholder="0" aria-label="Miles run">' +
+        '<button type="button" aria-label="Add a quarter mile">+</button>';
+      var input = wrapEl.querySelector("input");
+      wrapEl.children[0].onclick = function () { commit(Math.max(0, (+input.value || 0) - 0.25)); };
+      wrapEl.children[2].onclick = function () { commit((+input.value || 0) + 0.25); };
+      input.onchange = function () { commit(+input.value || 0); };
+      box.appendChild(wrapEl);
+
+      var unit = document.createElement("span");
+      unit.className = "unit";
+      unit.textContent = "miles";
+      box.appendChild(unit);
+
+      var full = document.createElement("button");
+      full.className = "btn btn-go";
+      full.textContent = logged >= goal ? "✓ " + fmt(goal) + " mi logged" : "Ran the full " + fmt(goal);
+      full.onclick = function () { commit(goal); };
+      box.appendChild(full);
+
+      if (e.t === "opt") {
+        var xbtn = document.createElement("button");
+        xbtn.className = "btn";
+        xbtn.setAttribute("aria-pressed", done && !logged ? "true" : "false");
+        xbtn.textContent = "Crossed instead";
+        xbtn.onclick = function () { markDone(!(done && !logged), 0); };
+        box.appendChild(xbtn);
+      }
+    } else {
+      var mark = document.createElement("button");
+      mark.className = "btn " + (done ? "" : "btn-go");
+      mark.setAttribute("aria-pressed", done ? "true" : "false");
+      mark.textContent = done ? "✓ Done" :
+        (e.t === "cross" ? "Mark " + e.min + " min done" : e.t === "rest" ? "Rested" : "Mark done");
+      mark.onclick = function () { markDone(!done, logged); };
+      box.appendChild(mark);
+
+      if (e.t !== "rest" || logged > 0) {
+        var bonus = document.createElement("div");
+        bonus.className = "stepper";
+        bonus.innerHTML =
+          '<button type="button" aria-label="Subtract a quarter mile">–</button>' +
+          '<input type="number" inputmode="decimal" step="0.1" min="0" max="99" value="' + (logged || "") + '" placeholder="0" aria-label="Bonus miles">' +
+          '<button type="button" aria-label="Add a quarter mile">+</button>';
+        var bi = bonus.querySelector("input");
+        bonus.children[0].onclick = function () { commit(Math.max(0, (+bi.value || 0) - 0.25)); };
+        bonus.children[2].onclick = function () { commit((+bi.value || 0) + 0.25); };
+        bi.onchange = function () { commit(+bi.value || 0); };
+        box.appendChild(bonus);
+        var u2 = document.createElement("span");
+        u2.className = "unit";
+        u2.textContent = "bonus mi";
+        box.appendChild(u2);
+      }
+    }
+
+    if (logged > 0 || done) {
+      var clr = document.createElement("button");
+      clr.className = "btn btn-quiet spacer";
+      clr.textContent = "Clear";
+      clr.onclick = function () {
+        delete me().log[viewWeek + ":" + selDay];
+        save();
+        render();
+      };
+      box.appendChild(clr);
+    }
+  }
+
+  /* --- writes + celebration ---------------------------------------- */
+
+  function commit(miles) {
+    miles = Math.max(0, Math.min(99, Math.round(miles * 100) / 100));
+    var r = me();
+    var k = viewWeek + ":" + selDay;
+    if (miles === 0) {
+      if (r.log[k]) { r.log[k].mi = 0; if (!r.log[k].done) delete r.log[k]; }
+    } else {
+      r.log[k] = r.log[k] || {};
+      r.log[k].mi = miles;
+    }
+    save();
+    checkCheers();
+  }
+
+  function markDone(flag, miles) {
+    var r = me();
+    var k = viewWeek + ":" + selDay;
+    if (!flag) {
+      if (r.log[k]) { r.log[k].done = false; if (!r.log[k].mi) delete r.log[k]; }
+      save();
+      render();
+      return;
+    }
+    r.log[k] = r.log[k] || {};
+    r.log[k].done = true;
+    if (miles) r.log[k].mi = miles;
+    save();
+    checkCheers();
+  }
+
+  /* Fires each goal's celebration exactly once, ever. */
+  function checkCheers() {
+    var r = me();
+    var cheer = null;
+    var msgs = [];    // full celebration: toast + confetti + the little guy
+    var quiet = [];   // just a toast
+
+    /* Only mileage earns the full celebration. Cross-training gets a nod,
+       and resting is not an achievement to throw confetti at. */
+    var e = PLAN[viewWeek][selDay];
+    var goal = goalOf(e);
+    var dk = "d" + viewWeek + ":" + selDay;
+    if (goal > 0 && milesFor(r, viewWeek, selDay) >= goal && !r.cheered[dk]) {
+      r.cheered[dk] = 1;
+      cheer = "day";
+      msgs.push(e.t === "race" ? e.name.toUpperCase() + " — DONE. 🏁" : pick(DAY_CHEERS));
+    } else if (e.t === "cross" && doneFor(r, viewWeek, selDay) && !r.cheered[dk]) {
+      r.cheered[dk] = 1;
+      quiet.push(e.min + " minutes cross-trained. Counts.");
+    }
+
+    var wk = "w" + viewWeek;
+    if (weekMiles(r, viewWeek) >= weekGoal(viewWeek) && !r.cheered[wk]) {
+      r.cheered[wk] = 1;
+      cheer = "week";
+      msgs.push("Week " + (viewWeek + 1) + " complete — " + pick(WEEK_CHEERS));
+    }
+
+    if (totalMiles(r) >= TOTAL && !r.cheered.all) {
+      r.cheered.all = 1;
+      cheer = "all";
+      msgs.push("All " + fmt(TOTAL) + " miles. You trained for a half marathon. 🏅");
+    }
+
+    save();
+    render({ cheer: cheer });
+
+    if (cheer) {
+      confetti(cheer === "all" ? 90 : cheer === "week" ? 60 : 34);
+      msgs.forEach(function (m, i) { setTimeout(function () { toast(m); }, i * 550); });
+    }
+    quiet.forEach(function (m) { toast(m); });
+  }
+
+  /* --- week strip --------------------------------------------------- */
+
+  function renderStrip() {
+    var r = me();
+    document.getElementById("strip-label").textContent =
+      "Week " + (viewWeek + 1) + " · " + fmt(weekMiles(r, viewWeek)) + " of " + fmt(weekGoal(viewWeek)) + " mi";
+
+    var strip = document.getElementById("strip");
+    strip.innerHTML = "";
+
+    PLAN[viewWeek].forEach(function (e, d) {
+      var goal = goalOf(e);
+      var mi = milesFor(r, viewWeek, d);
+      var done = doneFor(r, viewWeek, d);
+      var met = goal > 0 ? mi >= goal : done;
+
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip" + (met ? " met" : (mi > 0 || done) ? " partial" : "") +
+                    (d === selDay ? " sel" : "") + (isToday(viewWeek, d) ? " today" : "");
+      b.setAttribute("data-kind", kindOf(e));
+      b.innerHTML =
+        '<span class="chip-d">' + DAYS[d] + "</span>" +
+        '<span class="chip-m">' + shortOf(e) + "</span>" +
+        '<span class="chip-sub">' + (mi > 0 ? fmt(mi) + " mi" : goal > 0 ? "mi" : "&nbsp;") + "</span>" +
+        '<span class="dot"></span>';
+      b.onclick = function () { selDay = d; render(); };
+      strip.appendChild(b);
+    });
+  }
+
+  /* --- both runners -------------------------------------------------- */
+
+  function renderVersus() {
+    var p = position();
+    var w = p.before ? 0 : p.w;
+    var box = document.getElementById("versus");
+    box.innerHTML = "";
+
+    S.runners.forEach(function (rr) {
+      var tot = totalMiles(rr);
+      var wk = weekMiles(rr, w);
+      var cell = document.createElement("div");
+      cell.className = "vs-cell";
+      cell.innerHTML =
+        '<p class="vs-name">' + esc(rr.name) + "</p>" +
+        '<div class="vs-row"><span class="k">Week ' + (w + 1) + '</span><span class="v">' + fmt(wk) + " / " + fmt(weekGoal(w)) + " mi</span></div>" +
+        '<div class="vs-row"><span class="k">All time</span><span class="v">' + fmt(tot) + " mi</span></div>" +
+        '<div class="mini-track"><div class="mini-fill" style="width:' + Math.min(100, tot / TOTAL * 100) + '%"></div></div>';
+      box.appendChild(cell);
+    });
+  }
+
+  /* --- full 12-week table -------------------------------------------- */
+
+  function renderTable() {
+    var r = me();
+    var p = position();
+    var t = document.getElementById("plan-table");
+
+    var head = "<thead><tr><th class='wk'>Wk</th>";
+    DAYS.forEach(function (d) { head += "<th>" + d + "</th>"; });
+    head += "<th>Total</th></tr></thead>";
+
+    var body = "<tbody>";
+    PLAN.forEach(function (week, w) {
+      body += "<tr" + (!p.before && !p.after && p.w === w ? " class='now'" : "") + ">";
+      body += "<td class='wk'>" + (w + 1) + "</td>";
+      week.forEach(function (e, d) {
+        var goal = goalOf(e);
+        var mi = milesFor(r, w, d);
+        var met = goal > 0 ? mi >= goal : doneFor(r, w, d);
+        body += "<td class='d " + kindOf(e) + (met ? " met" : "") + "' data-w='" + w + "' data-d='" + d + "'>" +
+                labelOf(e).replace(" mi run or cross", " mi/x").replace(" mi run", " mi").replace(" min cross", "m x").replace("Rest or easy run", "rest/easy") +
+                "</td>";
+      });
+      body += "<td class='total'>" + fmt(weekMiles(r, w)) + " / " + fmt(weekGoal(w)) + "</td>";
+      body += "</tr>";
+    });
+    body += "</tbody>";
+
+    var foot = "<tfoot><tr><td class='wk'>All</td><td colspan='7'></td>" +
+               "<td class='total'>" + fmt(totalMiles(r)) + " / " + fmt(TOTAL) + "</td></tr></tfoot>";
+
+    t.innerHTML = head + body + foot;
+
+    Array.prototype.forEach.call(t.querySelectorAll("td.d"), function (td) {
+      td.onclick = function () {
+        viewWeek = +td.getAttribute("data-w");
+        selDay = +td.getAttribute("data-d");
+        render();
+        document.getElementById("strip-label").scrollIntoView({ behavior: "smooth", block: "center" });
+      };
+    });
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* =====================================================================
+     WIRING
+     ===================================================================== */
+
+  function jumpToToday() {
+    var p = position();
+    viewWeek = p.before ? 0 : p.w;
+    selDay = p.before ? 0 : p.d;
+    render();
+  }
+
+  document.getElementById("wk-prev").onclick = function () {
+    if (viewWeek > 0) { viewWeek--; selDay = 0; render(); }
+  };
+  document.getElementById("wk-next").onclick = function () {
+    if (viewWeek < 11) { viewWeek++; selDay = 0; render(); }
+  };
+  document.getElementById("wk-today").onclick = jumpToToday;
+
+  document.getElementById("in-start").onchange = function (ev) {
+    if (ev.target.value) { S.start = ev.target.value; save(); jumpToToday(); }
+  };
+  document.getElementById("in-n1").oninput = function (ev) {
+    S.runners[0].name = ev.target.value || "Runner 1"; save(); render();
+  };
+  document.getElementById("in-n2").oninput = function (ev) {
+    S.runners[1].name = ev.target.value || "Runner 2"; save(); render();
+  };
+
+  document.getElementById("b-copy").onclick = function () {
+    var box = document.getElementById("sync-box");
+    box.value = JSON.stringify(S);
+    box.select();
+    try {
+      navigator.clipboard.writeText(box.value);
+      toast("Code copied — paste it on the other phone.");
+    } catch (e) {
+      toast("Select the code above and copy it.");
+    }
+  };
+
+  document.getElementById("b-load").onclick = function () {
+    var box = document.getElementById("sync-box");
+    try {
+      var next = JSON.parse(box.value);
+      if (!next || !Array.isArray(next.runners) || next.runners.length !== 2) throw 0;
+      S = next;
+      S.runners.forEach(function (rr) { rr.log = rr.log || {}; rr.cheered = rr.cheered || {}; });
+      if (!S.start) S.start = mondayOfThisWeek();
+      save();
+      box.value = "";
+      jumpToToday();
+      toast("Loaded. Both runners are up to date.");
+    } catch (e) {
+      toast("That code didn't read as valid training data.");
+    }
+  };
+
+  document.getElementById("b-reset").onclick = function () {
+    if (!confirm("Erase both runners' logged miles and start over? This can't be undone.")) return;
+    S = freshState();
+    save();
+    jumpToToday();
+  };
+
+  jumpToToday();
+})();
+</script>
+</body>
+</html>
