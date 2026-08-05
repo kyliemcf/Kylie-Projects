@@ -9,93 +9,106 @@
 <body>
 <style>
 /* ---------------------------------------------------------------
-   Asphalt & hi-vis. Ground is concrete/asphalt, the accent is the
-   safety-vest chartreuse every runner already owns. Numbers are set
-   in mono throughout — split times on a race clock.
+   Strawberry & mint. Blush grounds, a plum ink friendlier than black,
+   strawberry-pink progress and a mint pay-off when a goal lands. Set in
+   a rounded face and generously curved — the numbers still line up,
+   they're just softer about it.
    --------------------------------------------------------------- */
 
 :root {
-  --ground:   #EFF1EA;
-  --surface:  #FBFCF7;
-  --sunken:   #E4E7DC;
-  --ink:      #171B14;
-  --ink-2:    #5A6154;
-  --ink-3:    #878E80;
-  --line:     #DBDFD1;
-  --line-2:   #C6CCB9;
-  --hivis:    #C4E52B;
-  --hivis-in: #171B14;
-  --accent:   #63750A;
-  --cool:     #2F6E7A;
-  --signal:   #C7431B;
-  --shadow:   0 1px 2px rgba(23,27,20,.06), 0 8px 24px -12px rgba(23,27,20,.18);
-  --runner-fill: #14170F;
-  --runner-edge: #FBFCF7;
+  --ground:   #FFF4F1;
+  --surface:  #FFFFFF;
+  --sunken:   #FCE7E3;
+  --ink:      #43304A;
+  --ink-2:    #7E6C86;
+  --ink-3:    #9E8BA6;
+  --line:     #F7DED9;
+  --line-2:   #EDC8C3;
+  --pop:      #F76A96;
+  --pop-in:   #FFFFFF;
+  --accent:   #C43F6D;
+  --cool:     #5A66D6;
+  --signal:   #C4611C;
+  --mint:     #17805F;
+  --mint-lit: #25C79B;
+  --shadow:   0 2px 4px rgba(180,90,120,.07), 0 14px 30px -14px rgba(180,90,120,.30);
+  --runner-fill: #43304A;
+  --runner-edge: #FFFFFF;
+  --face:     #FFF7FB;
 
-  --f-mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
-  --f-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --f-round: ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN", "Varela Round", Quicksand, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-body: var(--f-round);
 
-  --r: 10px;
-  --pad: clamp(16px, 4vw, 28px);
+  --r: 22px;
+  --pad: clamp(18px, 4.5vw, 30px);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ground:   #101208;
-    --surface:  #191C13;
-    --sunken:   #22261A;
-    --ink:      #EDF0E2;
-    --ink-2:    #A0A894;
-    --ink-3:    #757D69;
-    --line:     #2B3021;
-    --line-2:   #3D4430;
-    --hivis:    #C8EA2E;
-    --hivis-in: #101208;
-    --accent:   #C8EA2E;
-    --cool:     #6CC2D2;
-    --signal:   #FF7F52;
-    --shadow:   0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
-    --runner-fill: #14170F;
-    --runner-edge: #EDF0E2;
+    --ground:   #241B29;
+    --surface:  #2F2436;
+    --sunken:   #3B2D43;
+    --ink:      #F9EFF6;
+    --ink-2:    #C6B0CC;
+    --ink-3:    #96809E;
+    --line:     #3F3046;
+    --line-2:   #513F59;
+    --pop:      #FF85AF;
+    --pop-in:   #2A1F30;
+    --accent:   #FFA0C2;
+    --cool:     #A6B1FF;
+    --signal:   #FFB273;
+    --mint:     #58E0B8;
+    --mint-lit: #58E0B8;
+    --shadow:   0 2px 4px rgba(0,0,0,.32), 0 14px 30px -14px rgba(0,0,0,.62);
+    --runner-fill: #2A1F30;
+    --runner-edge: #F9EFF6;
+    --face:     #FFF7FB;
   }
 }
 
 :root[data-theme="dark"] {
-  --ground:   #101208;
-  --surface:  #191C13;
-  --sunken:   #22261A;
-  --ink:      #EDF0E2;
-  --ink-2:    #A0A894;
-  --ink-3:    #757D69;
-  --line:     #2B3021;
-  --line-2:   #3D4430;
-  --hivis:    #C8EA2E;
-  --hivis-in: #101208;
-  --accent:   #C8EA2E;
-  --cool:     #6CC2D2;
-  --signal:   #FF7F52;
-  --shadow:   0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
-  --runner-fill: #14170F;
-  --runner-edge: #EDF0E2;
+  --ground:   #241B29;
+  --surface:  #2F2436;
+  --sunken:   #3B2D43;
+  --ink:      #F9EFF6;
+  --ink-2:    #C6B0CC;
+  --ink-3:    #96809E;
+  --line:     #3F3046;
+  --line-2:   #513F59;
+  --pop:      #FF85AF;
+  --pop-in:   #2A1F30;
+  --accent:   #FFA0C2;
+  --cool:     #A6B1FF;
+  --signal:   #FFB273;
+  --mint:     #58E0B8;
+  --mint-lit: #58E0B8;
+  --shadow:   0 2px 4px rgba(0,0,0,.32), 0 14px 30px -14px rgba(0,0,0,.62);
+  --runner-fill: #2A1F30;
+  --runner-edge: #F9EFF6;
+  --face:     #FFF7FB;
 }
 
 :root[data-theme="light"] {
-  --ground:   #EFF1EA;
-  --surface:  #FBFCF7;
-  --sunken:   #E4E7DC;
-  --ink:      #171B14;
-  --ink-2:    #5A6154;
-  --ink-3:    #878E80;
-  --line:     #DBDFD1;
-  --line-2:   #C6CCB9;
-  --hivis:    #C4E52B;
-  --hivis-in: #171B14;
-  --accent:   #63750A;
-  --cool:     #2F6E7A;
-  --signal:   #C7431B;
-  --shadow:   0 1px 2px rgba(23,27,20,.06), 0 8px 24px -12px rgba(23,27,20,.18);
-  --runner-fill: #14170F;
-  --runner-edge: #FBFCF7;
+  --ground:   #FFF4F1;
+  --surface:  #FFFFFF;
+  --sunken:   #FCE7E3;
+  --ink:      #43304A;
+  --ink-2:    #7E6C86;
+  --ink-3:    #9E8BA6;
+  --line:     #F7DED9;
+  --line-2:   #EDC8C3;
+  --pop:      #F76A96;
+  --pop-in:   #FFFFFF;
+  --accent:   #C43F6D;
+  --cool:     #5A66D6;
+  --signal:   #C4611C;
+  --mint:     #17805F;
+  --mint-lit: #25C79B;
+  --shadow:   0 2px 4px rgba(180,90,120,.07), 0 14px 30px -14px rgba(180,90,120,.30);
+  --runner-fill: #43304A;
+  --runner-edge: #FFFFFF;
+  --face:     #FFF7FB;
 }
 
 * { box-sizing: border-box; }
@@ -127,7 +140,7 @@ body {
   padding: 26px 0 18px;
 }
 .wordmark {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 30px;
   font-weight: 700;
   letter-spacing: -.03em;
@@ -136,7 +149,7 @@ body {
 }
 .wordmark span { color: var(--accent); }
 .masthead .plan-name {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 11px;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -145,7 +158,7 @@ body {
 }
 .countdown {
   margin-left: auto;
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 12px;
   letter-spacing: .04em;
   color: var(--ink-2);
@@ -163,7 +176,7 @@ body {
   display: flex;
   gap: 6px;
   background: var(--sunken);
-  border-radius: 12px;
+  border-radius: 99px;
   padding: 5px;
   margin-bottom: 18px;
 }
@@ -174,11 +187,11 @@ body {
   border: 0;
   background: transparent;
   color: var(--ink-2);
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 13px;
   letter-spacing: .02em;
-  padding: 9px 10px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: 99px;
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -201,7 +214,7 @@ body {
 
 .card {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1.5px solid var(--line);
   border-radius: var(--r);
   box-shadow: var(--shadow);
   padding: var(--pad);
@@ -209,7 +222,7 @@ body {
 }
 
 .eyebrow {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 10.5px;
   letter-spacing: .13em;
   text-transform: uppercase;
@@ -226,17 +239,17 @@ body {
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 20px;   /* headroom so the runner never collides with the readout */
+  margin-bottom: 22px;   /* headroom so the runner never collides with the readout */
 }
 .meter-label {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 11px;
   letter-spacing: .11em;
   text-transform: uppercase;
   color: var(--ink-2);
 }
 .meter-val {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-variant-numeric: tabular-nums;
   font-size: 14px;
   color: var(--ink);
@@ -246,10 +259,11 @@ body {
 
 .track {
   position: relative;
-  height: 12px;
+  height: 15px;
   background: var(--sunken);
   border-radius: 99px;
   overflow: visible;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--line-2) 55%, transparent);
 }
 .track::after {           /* lane line down the middle of the road */
   content: "";
@@ -257,19 +271,20 @@ body {
   inset: 50% 10px auto;
   height: 1px;
   transform: translateY(-.5px);
-  background: repeating-linear-gradient(to right, var(--line-2) 0 6px, transparent 6px 14px);
-  opacity: .8;
+  background: repeating-linear-gradient(to right, var(--line-2) 0 3px, transparent 3px 11px);
+  opacity: .55;
 }
 .fill {
   position: absolute;
   inset: 0 auto 0 0;
   border-radius: 99px;
-  background: var(--hivis);
+  background: linear-gradient(100deg, color-mix(in srgb, var(--pop) 78%, #FFC4D8), var(--pop));
   width: 0;
-  transition: width .5s cubic-bezier(.22,.9,.3,1);
+  transition: width .55s cubic-bezier(.34,1.3,.4,1);
   z-index: 1;
 }
-.meter.is-over .fill { background: linear-gradient(90deg, var(--hivis), var(--cool)); }
+.meter.is-done .fill { background: linear-gradient(100deg, var(--pop), var(--mint-lit)); }
+.meter.is-over .fill { background: linear-gradient(90deg, var(--pop), var(--cool)); }
 
 .runner-slot {
   position: absolute;
@@ -289,38 +304,39 @@ body {
 .meter-note b { color: var(--ink-2); font-weight: 600; }
 
 /* the big one */
-.meter-daily .track { height: 18px; }
+.meter-daily .track { height: 22px; }
 .meter-daily .meter-val { font-size: 17px; }
-.meter-daily .meter-head { margin-bottom: 31px; }
+.meter-daily .meter-head { margin-bottom: 47px; }
 
 /* ---- runner character -------------------------------------------- */
 
-/* The runner stands on the leading edge of the bar, so half of it is over
-   hi-vis fill and half over empty track. A dark fill with a light outline is
-   the only combination that reads against both, in either theme. */
+/* Big head, small body, little face. The runner stands on the leading edge of
+   the bar, so half of it is over pink fill and half over empty track — a dark
+   fill with a light halo is the only combination that reads against both. */
 .runner { display: block; overflow: visible; }
 .runner .lim { transform-box: fill-box; }
-.runner .body-g { transform-box: fill-box; transform-origin: 50% 100%; }
-.runner .torso, .runner .head, .runner .lim, .runner .prop > * { fill: var(--runner-fill); }
-
-/* Kylie's ponytail trails off the back of the head and swishes as she runs;
-   Caleb's cap sits on top with the brim forward. */
-.runner .pony {
-  transform-box: fill-box;
-  transform-origin: 94% 30%;
-  transform: rotate(-26deg);   /* negative swings the tail down-and-back: +ve lifts it */
-}
-.runner[data-state="run"] .pony { animation: swish .42s ease-in-out infinite; }
-.runner.cheer .pony             { animation: swish .31s ease-in-out 6; }
-@keyframes swish { 0%, 100% { transform: rotate(-14deg); } 50% { transform: rotate(-36deg); } }
-/* Halo the silhouette rather than stroking each shape — a per-shape stroke at
-   this size fattens the limbs until they merge into the torso. */
 .runner .body-g {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
   filter: drop-shadow(0 0 1px var(--runner-edge)) drop-shadow(0 0 1px var(--runner-edge));
 }
+.runner .torso, .runner .head, .runner .lim, .runner .prop > * { fill: var(--runner-fill); }
+.runner .eye { fill: var(--face); }
+.runner .smile { fill: none; stroke: var(--face); stroke-width: .85; stroke-linecap: round; }
+.runner[data-size="sm"] .face { display: none; }   /* too small to read cleanly */
 
 .runner .arm-f, .runner .arm-b { transform-origin: 50% 6%; }
 .runner .leg-f, .runner .leg-b { transform-origin: 50% 4%; }
+
+/* Kylie's ponytail is built to hang down and back already; it just pivots at
+   the tie so the whole tail swings as one. */
+.runner .tail {
+  transform-box: fill-box;
+  transform-origin: 88% 2%;
+}
+.runner[data-state="run"] .tail { animation: swish .42s ease-in-out infinite; }
+.runner.cheer .tail            { animation: swish .31s ease-in-out 6; }
+@keyframes swish { 0%, 100% { transform: rotate(-9deg); } 50% { transform: rotate(13deg); } }
 
 /* running cycle */
 .runner[data-state="run"] .body-g   { animation: bob .42s linear infinite; }
@@ -329,7 +345,7 @@ body {
 .runner[data-state="run"] .leg-f    { animation: strideA .42s linear infinite; }
 .runner[data-state="run"] .leg-b    { animation: strideB .42s linear infinite; }
 
-@keyframes bob     { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1.6px); } }
+@keyframes bob     { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1.8px); } }
 @keyframes swingA  { 0%,100% { transform: rotate(46deg); } 50% { transform: rotate(-50deg); } }
 @keyframes swingB  { 0%,100% { transform: rotate(-50deg); } 50% { transform: rotate(46deg); } }
 @keyframes strideA { 0%,100% { transform: rotate(-38deg); } 50% { transform: rotate(34deg); } }
@@ -341,9 +357,9 @@ body {
 .runner[data-state="idle"] .leg-f  { transform: rotate(15deg); }
 .runner[data-state="idle"] .leg-b  { transform: rotate(-15deg); }
 .runner[data-state="idle"] .body-g { animation: breathe 3.4s ease-in-out infinite; }
-@keyframes breathe { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.8px); } }
+@keyframes breathe { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
 
-/* rest day — sitting it out, and that's the plan */
+/* rest day — off duty, and that's the plan */
 .runner[data-state="rest"] .body-g { transform: translateY(2px); animation: breathe 4.4s ease-in-out infinite; }
 .runner[data-state="rest"] .arm-f  { transform: rotate(11deg); }
 .runner[data-state="rest"] .arm-b  { transform: rotate(-9deg); }
@@ -352,12 +368,13 @@ body {
 .runner[data-state="rest"] .torso, .runner[data-state="rest"] .head,
 .runner[data-state="rest"] .lim, .runner[data-state="rest"] .prop > * { fill: var(--ink-3); }
 
-/* goal met — switches to the signal colour so it still reads while standing
-   on a completely hi-vis bar */
+/* goal met — mint, arms up. Past about 150deg the arms hide behind the head. */
 .runner[data-state="done"] .torso,
 .runner[data-state="done"] .lim,
 .runner[data-state="done"] .head,
-.runner[data-state="done"] .prop > * { fill: var(--signal); }
+.runner[data-state="done"] .prop > * { fill: var(--mint-lit); }
+.runner[data-state="done"] .eye   { fill: #10322A; }
+.runner[data-state="done"] .smile { stroke: #10322A; }
 .runner[data-state="done"] .arm-f { transform: rotate(119deg); }
 .runner[data-state="done"] .arm-b { transform: rotate(-119deg); }
 .runner[data-state="done"] .leg-f { transform: rotate(12deg); }
@@ -369,7 +386,7 @@ body {
 .runner.cheer .arm-b  { animation: cheerB .31s ease-in-out 6; }
 .runner.cheer .leg-f  { animation: kickA .31s ease-in-out 6; }
 .runner.cheer .leg-b  { animation: kickB .31s ease-in-out 6; }
-@keyframes leap   { 0%,100% { transform: translateY(0) scaleY(1); } 18% { transform: translateY(1px) scaleY(.86); } 55% { transform: translateY(-11px) scaleY(1.06); } }
+@keyframes leap   { 0%,100% { transform: translateY(0) scaleY(1); } 18% { transform: translateY(1px) scaleY(.86); } 55% { transform: translateY(-13px) scaleY(1.06); } }
 @keyframes cheerA { 0%,100% { transform: rotate(107deg); } 50% { transform: rotate(131deg); } }
 @keyframes cheerB { 0%,100% { transform: rotate(-131deg); } 50% { transform: rotate(-107deg); } }
 @keyframes kickA  { 0%,100% { transform: rotate(24deg); } 50% { transform: rotate(-6deg); } }
@@ -413,18 +430,19 @@ body {
   width: min(440px, calc(100vw - 32px));
 }
 .toast {
-  background: var(--hivis);
-  color: var(--hivis-in);
+  background: var(--mint-lit);
+  color: #10322A;
   border-radius: 99px;
-  padding: 11px 20px;
-  font-family: var(--f-mono);
+  padding: 12px 22px;
+  font-weight: 600;
+  font-family: var(--f-round);
   font-size: 13px;
   letter-spacing: .01em;
   text-align: center;
   box-shadow: 0 10px 30px -10px rgba(0,0,0,.5);
   animation: pop .3s cubic-bezier(.2,1.4,.4,1) both, fade .4s 3.2s forwards;
 }
-@keyframes pop  { from { transform: translateY(14px) scale(.94); opacity: 0; } }
+@keyframes pop  { 0% { transform: translateY(16px) scale(.9); opacity: 0; } 60% { transform: translateY(-3px) scale(1.04); } 100% { transform: translateY(0) scale(1); opacity: 1; } }
 @keyframes fade { to { transform: translateY(-6px); opacity: 0; } }
 
 /* ---- today / selected day ---------------------------------------- */
@@ -437,7 +455,7 @@ body {
   flex-wrap: wrap;
 }
 .day-title {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -.02em;
@@ -445,7 +463,7 @@ body {
   line-height: 1.2;
 }
 .day-when {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 11px;
   letter-spacing: .11em;
   text-transform: uppercase;
@@ -454,7 +472,7 @@ body {
 }
 .tag {
   display: inline-block;
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 10.5px;
   letter-spacing: .09em;
   text-transform: uppercase;
@@ -480,8 +498,8 @@ body {
 .stepper {
   display: flex;
   align-items: stretch;
-  border: 1px solid var(--line-2);
-  border-radius: 9px;
+  border: 1.5px solid var(--line-2);
+  border-radius: 99px;
   overflow: hidden;
   background: var(--ground);
 }
@@ -490,7 +508,7 @@ body {
   border: 0;
   background: transparent;
   color: var(--ink-2);
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 19px;
   width: 42px;
   cursor: pointer;
@@ -505,7 +523,7 @@ body {
   border-right: 1px solid var(--line-2);
   background: var(--surface);
   color: var(--ink);
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-variant-numeric: tabular-nums;
   font-size: 19px;
   text-align: center;
@@ -515,7 +533,7 @@ body {
 .stepper input::-webkit-outer-spin-button,
 .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .unit {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 12px;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -524,12 +542,12 @@ body {
 
 .btn {
   appearance: none;
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 12.5px;
   letter-spacing: .04em;
-  padding: 11px 18px;
-  border-radius: 9px;
-  border: 1px solid var(--line-2);
+  padding: 12px 20px;
+  border-radius: 99px;
+  border: 1.5px solid var(--line-2);
   background: var(--surface);
   color: var(--ink);
   cursor: pointer;
@@ -538,15 +556,15 @@ body {
 .btn:hover { background: var(--sunken); }
 .btn:active { transform: translateY(1px); }
 .btn-go {
-  background: var(--hivis);
-  border-color: var(--hivis);
-  color: var(--hivis-in);
+  background: var(--pop);
+  border-color: var(--pop);
+  color: var(--pop-in);
   font-weight: 700;
 }
-.btn-go:hover { background: var(--hivis); filter: brightness(1.06); }
+.btn-go:hover { background: var(--pop); filter: brightness(1.06); }
 .btn-quiet { border-color: transparent; background: transparent; color: var(--ink-3); padding-left: 8px; padding-right: 8px; }
 .btn-quiet:hover { background: var(--sunken); color: var(--ink-2); }
-.btn[aria-pressed="true"] { background: var(--hivis); border-color: var(--hivis); color: var(--hivis-in); }
+.btn[aria-pressed="true"] { background: var(--pop); border-color: var(--pop); color: var(--pop-in); }
 
 .logger .spacer { margin-left: auto; }
 
@@ -562,7 +580,7 @@ body {
   border-top: 1px dashed var(--line);
 }
 .swap-label {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 10.5px;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -571,11 +589,11 @@ body {
 }
 .day-btn {
   appearance: none;
-  font-family: var(--f-mono);
-  font-size: 11px;
-  padding: 7px 9px;
-  border-radius: 7px;
-  border: 1px solid var(--line-2);
+  font-family: var(--f-round);
+  font-size: 11.5px;
+  padding: 8px 11px;
+  border-radius: 99px;
+  border: 1.5px solid var(--line-2);
   background: var(--ground);
   color: var(--ink-2);
   cursor: pointer;
@@ -609,9 +627,9 @@ body {
 }
 .chip {
   appearance: none;
-  border: 1px solid var(--line);
+  border: 1.5px solid var(--line);
   background: var(--ground);
-  border-radius: 9px;
+  border-radius: 16px;
   padding: 9px 3px 8px;
   cursor: pointer;
   display: flex;
@@ -621,33 +639,34 @@ body {
   min-width: 0;
   transition: border-color .14s, background .14s, transform .1s;
 }
-.chip:hover { border-color: var(--line-2); }
-.chip:active { transform: translateY(1px); }
+.chip:hover { border-color: var(--pop); transform: translateY(-2px); }
+.chip:active { transform: translateY(0); }
 .chip-d {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 10px;
   letter-spacing: .07em;
   text-transform: uppercase;
   color: var(--ink-3);
 }
 .chip-m {
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-variant-numeric: tabular-nums;
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
   line-height: 1;
 }
-.chip-sub { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-3); line-height: 1; white-space: nowrap; }
+.chip-sub { font-family: var(--f-round); font-size: 9.5px; color: var(--ink-3); line-height: 1; white-space: nowrap; }
 .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--line-2); }
 
 .chip[data-kind="rest"] .chip-m { color: var(--ink-3); font-weight: 400; }
 .chip[data-kind="cross"] .chip-m { color: var(--cool); }
 .chip[data-kind="race"] .chip-m { color: var(--signal); }
-.chip.met { background: color-mix(in srgb, var(--hivis) 16%, var(--ground)); border-color: color-mix(in srgb, var(--hivis) 45%, var(--line)); }
-.chip.met .dot { background: var(--hivis); }
+.chip[data-kind="race"] { background: color-mix(in srgb, var(--signal) 12%, var(--ground)); }
+.chip.met { background: color-mix(in srgb, var(--mint-lit) 20%, var(--surface)); border-color: color-mix(in srgb, var(--mint-lit) 55%, var(--line)); }
+.chip.met .dot { background: var(--mint-lit); }
 .chip.partial .dot { background: var(--ink-2); }
-.chip.sel { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.chip.sel { border-color: var(--pop); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pop) 22%, transparent); }
 .chip.today .chip-d { color: var(--accent); font-weight: 700; }
 
 /* ---- full plan --------------------------------------------------- */
@@ -657,7 +676,7 @@ table.plan {
   width: 100%;
   min-width: 640px;
   border-collapse: collapse;
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 12px;
 }
 table.plan th, table.plan td {
@@ -676,31 +695,31 @@ table.plan thead th {
 }
 table.plan th.wk, table.plan td.wk { text-align: left; color: var(--ink-3); }
 table.plan td.total { font-variant-numeric: tabular-nums; color: var(--ink-2); }
-table.plan tr.now { background: color-mix(in srgb, var(--hivis) 10%, transparent); }
+table.plan tr.now { background: color-mix(in srgb, var(--pop) 12%, transparent); }
 table.plan tr.now td.wk { color: var(--accent); font-weight: 700; }
 table.plan td.d { color: var(--ink); cursor: pointer; }
 table.plan td.d:hover { background: var(--sunken); }
 table.plan td.d.rest { color: var(--ink-3); }
 table.plan td.d.cross { color: var(--cool); }
 table.plan td.d.race { color: var(--signal); font-weight: 700; }
-table.plan td.d.met { color: var(--accent); font-weight: 700; }
+table.plan td.d.met { color: var(--mint); font-weight: 700; }
 table.plan td.d.met::after { content: " ✓"; }
 table.plan tfoot td { border-bottom: 0; padding-top: 12px; color: var(--ink-2); font-weight: 700; }
 
 /* ---- both-runners row -------------------------------------------- */
 
 .versus { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.vs-cell { background: var(--ground); border: 1px solid var(--line); border-radius: 9px; padding: 13px 14px; min-width: 0; }
+.vs-cell { background: var(--ground); border: 1.5px solid var(--line); border-radius: 16px; padding: 14px 16px; min-width: 0; }
 .vs-name {
-  font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  font-family: var(--f-round); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
   color: var(--ink-3); margin: 0 0 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.vs-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--f-mono); font-size: 12px; }
+.vs-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--f-round); font-size: 12px; }
 .vs-row + .vs-row { margin-top: 5px; }
 .vs-row .k { color: var(--ink-3); }
 .vs-row .v { font-variant-numeric: tabular-nums; color: var(--ink); }
 .mini-track { height: 5px; background: var(--sunken); border-radius: 99px; overflow: hidden; margin-top: 10px; }
-.mini-fill { height: 100%; background: var(--hivis); border-radius: 99px; transition: width .5s ease; }
+.mini-fill { height: 100%; background: linear-gradient(90deg, color-mix(in srgb, var(--pop) 75%, #FFC4D8), var(--pop)); border-radius: 99px; transition: width .5s ease; }
 
 /* ---- settings ---------------------------------------------------- */
 
@@ -709,7 +728,7 @@ details.setup > summary {
   list-style: none;
   cursor: pointer;
   padding: 16px 0 0;
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 11px;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -722,13 +741,13 @@ details.setup > summary:hover { color: var(--ink-2); }
 
 .field { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
 .field label {
-  font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  font-family: var(--f-round); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
   color: var(--ink-3); flex: 0 0 120px;
 }
 .field input[type="text"], .field input[type="date"] {
   flex: 1 1 180px;
   min-width: 0;
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 13.5px;
   padding: 9px 11px;
   border-radius: 8px;
@@ -741,7 +760,7 @@ textarea.sync {
   width: 100%;
   height: 92px;
   margin-top: 10px;
-  font-family: var(--f-mono);
+  font-family: var(--f-round);
   font-size: 11px;
   padding: 10px;
   border-radius: 8px;
@@ -1122,41 +1141,55 @@ textarea.sync {
      THE LITTLE GUY
      ===================================================================== */
 
-  function runnerSVG(scale, style) {
-    var s = scale || 1;
+  function runnerSVG(scale, style, small) {
+    var z = scale || 1;
     var prop = style === "cap"
       ? '<g class="prop">' +
-          '<rect class="cap-crown" x="10.0" y="0.5" width="8.0" height="3.5" rx="1.75"/>' +
-          '<rect class="cap-brim"  x="13.8" y="3.2" width="7.4" height="1.4" rx=".7"/>' +
+          '<rect class="cap-crown" x="10.4" y="2.4" width="12.0" height="4.3" rx="2.15"/>' +
+          '<rect class="cap-brim"  x="16.2" y="5.9" width="8.8"  height="1.9" rx=".95"/>' +
         '</g>'
-      : '<g class="prop"><ellipse class="pony" cx="9.3" cy="6.9" rx="2.9" ry="1.5"/></g>';
-    /* Narrow torso, long limbs pivoting from shoulder and hip — the limbs have
-       to swing clear of the torso or the silhouette reads as a blob. */
+      : '<g class="prop">' +
+          '<g class="tail">' +                       /* overlapping so it reads as one tapering tail */
+            '<circle cx="10.6" cy="10.6" r="2.00"/>' +
+            '<circle cx="9.2"  cy="12.9" r="1.75"/>' +
+            '<circle cx="8.0"  cy="15.0" r="1.45"/>' +
+            '<circle cx="7.1"  cy="16.9" r="1.15"/>' +
+            '<circle cx="6.5"  cy="18.5" r="0.85"/>' +
+          '</g>' +
+          '<circle class="tie" cx="11.7" cy="8.5" r="1.75"/>' +
+        '</g>';
+
+    var face = '<g class="face">' +
+        '<circle class="eye" cx="17.9" cy="10.2" r="1.15"/>' +
+        '<circle class="eye" cx="21.0" cy="10.2" r="1.15"/>' +
+        '<path class="smile" d="M18.3 13.1 q1.6 1.5 3.2 0"/>' +
+      '</g>';
+
     return '' +
-      '<svg class="runner" width="' + (28 * s) + '" height="' + (36 * s) + '" viewBox="0 0 28 36" data-state="idle" aria-hidden="true">' +
+      '<svg class="runner" width="' + (32 * z) + '" height="' + (38 * z) + '" viewBox="0 0 32 38"' +
+        ' data-state="idle" data-size="' + (small ? "sm" : "lg") + '" aria-hidden="true">' +
         '<g class="body-g">' +
-          '<rect class="lim arm-b" x="12.7" y="11.4" width="2.4" height="9.6" rx="1.2"/>' +
-          '<rect class="lim leg-b" x="12.4" y="20"   width="2.9" height="13"  rx="1.45"/>' +
-          '<rect class="torso" x="11.9" y="10" width="4.2" height="11.4" rx="2.1"/>' +
-          '<rect class="lim leg-f" x="12.4" y="20"   width="2.9" height="13"  rx="1.45"/>' +
-          '<rect class="lim arm-f" x="12.7" y="11.4" width="2.4" height="9.6" rx="1.2"/>' +
+          '<rect class="lim arm-b" x="15.2" y="15.6" width="2.7" height="8.2" rx="1.35"/>' +
+          '<rect class="lim leg-b" x="14.9" y="22.4" width="3.2" height="10.4" rx="1.6"/>' +
           (style === "cap" ? '' : prop) +
-          '<circle class="head" cx="14" cy="5.6" r="4.1"/>' +
+          '<rect class="torso" x="14.3" y="14.6" width="4.9" height="8.6" rx="2.45"/>' +
+          '<rect class="lim leg-f" x="14.9" y="22.4" width="3.2" height="10.4" rx="1.6"/>' +
+          '<rect class="lim arm-f" x="15.2" y="15.6" width="2.7" height="8.2" rx="1.35"/>' +
+          '<circle class="head" cx="16.6" cy="9.4" r="6.6"/>' +
           (style === "cap" ? prop : '') +
+          face +
         '</g>' +
       '</svg>';
   }
 
-  /* Kylie runs with a ponytail, Caleb in a cap. Only re-inject when the active
-     runner changes, so switching profiles doesn't restart the running cycle. */
   var shownStyle = null;
   function ensureRunners() {
     var style = S.active === 0 ? "pony" : "cap";
     if (style === shownStyle) return;
     shownStyle = style;
-    document.getElementById("r-day").innerHTML  = runnerSVG(1, style);
-    document.getElementById("r-week").innerHTML = runnerSVG(0.6, style);
-    document.getElementById("r-all").innerHTML  = runnerSVG(0.6, style);
+    document.getElementById("r-day").innerHTML  = runnerSVG(1.5, style);
+    document.getElementById("r-week").innerHTML = runnerSVG(0.62, style, true);
+    document.getElementById("r-all").innerHTML  = runnerSVG(0.62, style, true);
   }
 
   function setRunner(slotId, state, cheer) {
@@ -1174,7 +1207,7 @@ textarea.sync {
   function confetti(n) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     var layer  = document.getElementById("confetti");
-    var colors = ["#C4E52B", "#8FBF1E", "#2F6E7A", "#E0552B", "#EDF0E2"];
+    var colors = ["#F76A96", "#25C79B", "#FFC95C", "#A6B1FF", "#FF9FC0"];
     var cx = window.innerWidth / 2;
     var cy = window.innerHeight * 0.34;
     for (var i = 0; i < n; i++) {
@@ -1189,6 +1222,7 @@ textarea.sync {
       b.style.setProperty("--dy",  (Math.sin(ang) * dist + 220 + Math.random() * 160) + "px");
       b.style.setProperty("--rot", (Math.random() * 900 - 450) + "deg");
       b.style.setProperty("--dur", (1100 + Math.random() * 900) + "ms");
+      if (i % 2) b.style.borderRadius = "50%";        /* mix dots in with the confetti */
       layer.appendChild(b);
       (function (node) { setTimeout(function () { node.remove(); }, 2200); })(b);
     }
@@ -1314,6 +1348,7 @@ textarea.sync {
     document.getElementById("f-" + id).style.width = (pct * 100) + "%";
     document.getElementById("r-" + id).style.left  = (pct * 100) + "%";
     document.getElementById("m-" + id).classList.toggle("is-over", ratio > 1.001);
+    document.getElementById("m-" + id).classList.toggle("is-done", ratio >= 1);
     document.getElementById("v-" + id).innerHTML =
       valHTML + '<span class="pct">' + Math.round(ratio * 100) + "%</span>";
   }

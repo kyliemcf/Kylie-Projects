@@ -19,9 +19,11 @@ screen, and it behaves like an app.
 | All 12 weeks | Everything you've run against the full 199.4 |
 
 **A little runner on every bar.** It stands at your current progress and runs as
-you log miles. Hit a goal and it throws its arms up, turns orange, and jumps
+you log miles. Hit a goal and it flings its arms out, turns mint green, and jumps
 while confetti goes off. Kylie's runner has a ponytail that swishes as she runs;
-Caleb's wears a cap. The character follows whichever profile is selected.
+Caleb's wears a cap. The big one on the today bar has a face; the small ones on
+the week and overall bars drop it, since it wouldn't read at that size. The
+character follows whichever profile is selected.
 
 The celebration is tiered on purpose:
 
@@ -70,6 +72,13 @@ time-based, so they're marked done rather than adding miles — which is why a
 "complete" week can still be 100% with cross days on it.
 
 Source: <https://www.halhigdon.com/training-programs/half-marathon-training/novice-1-half-marathon/>
+
+## The look
+
+Strawberry and mint: blush grounds, a plum ink that's friendlier than black,
+strawberry-pink progress bars and a mint pay-off when a goal lands. Everything is
+set in a rounded typeface and generously curved. Both light and dark themes are
+designed — dark is a soft plum rather than a straight inversion.
 
 ## Setup
 
