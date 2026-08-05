@@ -1,7 +1,8 @@
 # 13.1 — Half Marathon Training
 
-A two-person training tracker built around **Hal Higdon's Novice 1 half marathon
-program** — 12 weeks, 206.4 miles, ending at 13.1.
+A two-person training tracker for Kylie and Caleb, built around **Hal Higdon's
+Novice 1 half marathon program** — 12 weeks, 199.4 miles, ending at 13.1 on
+**Thursday, November 26 2026**.
 
 It's a single self-contained `index.html`. No build step, no server, no account.
 Open the file (or the published link) in any browser, add it to your phone's home
@@ -15,11 +16,12 @@ screen, and it behaves like an app.
 | --- | --- |
 | Today | Miles logged against today's prescribed workout |
 | This week | The week's running total against that week's plan |
-| All 12 weeks | Everything you've run against the full 206.4 |
+| All 12 weeks | Everything you've run against the full 199.4 |
 
 **A little runner on every bar.** It stands at your current progress and runs as
 you log miles. Hit a goal and it throws its arms up, turns orange, and jumps
-while confetti goes off.
+while confetti goes off. Kylie's runner has a ponytail that swishes as she runs;
+Caleb's wears a cap. The character follows whichever profile is selected.
 
 The celebration is tiered on purpose:
 
@@ -36,12 +38,32 @@ log. The "Both of you" panel shows where you each stand this week and overall.
 full 12-week table to log or backfill it. Wednesdays are "run or cross" in this
 plan, so those days have a *Crossed instead* button.
 
+**Move workouts between days.** Life doesn't always match the grid. Select a day
+and use **Move this to** to swap that workout onto another day of the same week —
+long run to Saturday, rest day to Friday, whatever you need. A few things worth
+knowing:
+
+- Swapping never changes the week's total, since it's the same workouts reordered
+- Miles you've already logged stay on the date you actually ran them; only the
+  plan moves
+- Each of you can rearrange independently — Kylie's shuffle doesn't touch Caleb's
+- A rearranged week is labelled as such, and **Reset week** puts it back
+
 ## The plan
 
 Hal Higdon's Novice 1: Monday rest, runs Tuesday/Wednesday/Thursday, Friday rest,
 cross-training Saturday, long run Sunday. It builds from 3-mile runs in Week 1 to
 a 10-mile long run in Week 11, with a 5-K in Week 6 and a 10-K in Week 9, then
 tapers into race day.
+
+**Race day is a Thursday, and Higdon's plan races on a Sunday.** Rather than
+sliding the whole calendar (which would drag every long run onto a Thursday),
+weeks 1–11 stay on their Mon–Sun grid so long runs stay on the weekend, and week
+12 is a short week: Monday to race day. It takes the tail of Higdon's taper, so
+the days immediately before the race are exactly the ones he prescribes —
+2 mi, rest, rest, race. That makes week 12 worth 15.1 miles and the plan 199.4.
+
+Working back from November 26, **Week 1 Monday is September 7 2026**.
 
 Races count toward mileage at 3.1 / 6.2 / 13.1. Cross-training days are
 time-based, so they're marked done rather than adding miles — which is why a
@@ -53,9 +75,9 @@ Source: <https://www.halhigdon.com/training-programs/half-marathon-training/novi
 
 Open **Setup & sync** at the bottom.
 
-- **Week 1 Monday** — set this to the Monday you start. Everything (which week
-  you're in, the race-day countdown) is derived from it. Race day is the Sunday
-  of Week 12.
+- **Race day** — set to November 26 2026. Everything else is derived from it:
+  Week 1 Monday, which week you're in today, and the countdown. Change the date
+  and the whole plan re-anchors, including the shape of week 12.
 - **Runner names** — rename the two profiles to whatever you like.
 
 ## About syncing

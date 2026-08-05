@@ -301,7 +301,18 @@ body {
 .runner { display: block; overflow: visible; }
 .runner .lim { transform-box: fill-box; }
 .runner .body-g { transform-box: fill-box; transform-origin: 50% 100%; }
-.runner .torso, .runner .head, .runner .lim { fill: var(--runner-fill); }
+.runner .torso, .runner .head, .runner .lim, .runner .prop > * { fill: var(--runner-fill); }
+
+/* Kylie's ponytail trails off the back of the head and swishes as she runs;
+   Caleb's cap sits on top with the brim forward. */
+.runner .pony {
+  transform-box: fill-box;
+  transform-origin: 94% 30%;
+  transform: rotate(-26deg);   /* negative swings the tail down-and-back: +ve lifts it */
+}
+.runner[data-state="run"] .pony { animation: swish .42s ease-in-out infinite; }
+.runner.cheer .pony             { animation: swish .31s ease-in-out 6; }
+@keyframes swish { 0%, 100% { transform: rotate(-14deg); } 50% { transform: rotate(-36deg); } }
 /* Halo the silhouette rather than stroking each shape — a per-shape stroke at
    this size fattens the limbs until they merge into the torso. */
 .runner .body-g {
@@ -339,13 +350,14 @@ body {
 .runner[data-state="rest"] .leg-f  { transform: rotate(6deg); }
 .runner[data-state="rest"] .leg-b  { transform: rotate(-6deg); }
 .runner[data-state="rest"] .torso, .runner[data-state="rest"] .head,
-.runner[data-state="rest"] .lim    { fill: var(--ink-3); }
+.runner[data-state="rest"] .lim, .runner[data-state="rest"] .prop > * { fill: var(--ink-3); }
 
 /* goal met — switches to the signal colour so it still reads while standing
    on a completely hi-vis bar */
 .runner[data-state="done"] .torso,
 .runner[data-state="done"] .lim,
-.runner[data-state="done"] .head { fill: var(--signal); }
+.runner[data-state="done"] .head,
+.runner[data-state="done"] .prop > * { fill: var(--signal); }
 .runner[data-state="done"] .arm-f { transform: rotate(119deg); }
 .runner[data-state="done"] .arm-b { transform: rotate(-119deg); }
 .runner[data-state="done"] .leg-f { transform: rotate(12deg); }
@@ -537,6 +549,46 @@ body {
 .btn[aria-pressed="true"] { background: var(--hivis); border-color: var(--hivis); color: var(--hivis-in); }
 
 .logger .spacer { margin-left: auto; }
+
+/* ---- move a workout to another day ------------------------------- */
+
+.swap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+.swap-label {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-right: 4px;
+}
+.day-btn {
+  appearance: none;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  border: 1px solid var(--line-2);
+  background: var(--ground);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background .14s, color .14s, border-color .14s;
+}
+.day-btn:hover:not(:disabled) { background: var(--sunken); color: var(--ink); border-color: var(--ink-3); }
+.day-btn.is-here {
+  background: var(--sunken);
+  border-color: var(--line-2);
+  color: var(--ink-3);
+  cursor: default;
+}
+.swap .btn-quiet { margin-left: auto; font-size: 11px; padding: 7px 9px; }
 
 /* ---- week strip -------------------------------------------------- */
 
@@ -788,6 +840,7 @@ textarea.sync {
       <span class="tag" id="d-tag"></span>
     </div>
     <div class="logger" id="logger"></div>
+    <div class="swap" id="swap"></div>
   </section>
 
   <!-- week strip -->
@@ -820,9 +873,10 @@ textarea.sync {
       <summary>Setup &amp; sync</summary>
 
       <div class="field">
-        <label for="in-start">Week 1 Monday</label>
-        <input type="date" id="in-start">
+        <label for="in-race">Race day</label>
+        <input type="date" id="in-race">
       </div>
+      <p class="hint" id="start-note"></p>
       <div class="field">
         <label for="in-n1">Runner 1</label>
         <input type="text" id="in-n1" maxlength="24" autocomplete="off">
@@ -847,7 +901,7 @@ textarea.sync {
 
   <p class="colophon">
     Schedule from Hal Higdon's Novice 1 half marathon program.<br>
-    206.4 miles between Week 1 Monday and the finish line.
+    <span id="total-note"></span>
   </p>
 
 </div>
@@ -884,8 +938,15 @@ textarea.sync {
     [R, run(5),   opt(3), run(5),   R, easy,   { t: "race", m: 6.2,  name: "10-K Race" }],
     [R, run(5),   opt(3), run(5),   R, xt(60), run(9)],
     [R, run(5),   opt(3), run(5),   R, xt(60), run(10)],
-    [R, run(4),   opt(3), run(2),   R, R,      { t: "race", m: 13.1, name: "Half Marathon" }]
+    []                                    /* week 12 — shaped by the race weekday */
   ];
+
+  /* Higdon runs the final week Mon-Sat easy and races Sunday. When race day
+     falls on another weekday, weeks 1-11 stay on their Mon-Sun grid (long runs
+     belong on the weekend) and week 12 is the tail of his taper, so the days
+     immediately before the race are exactly the ones he prescribes. */
+  var W12_TAPER = [R, run(4), opt(3), run(2), R, R];
+  var HALF = { t: "race", m: 13.1, name: "Half Marathon" };
 
   var DAYS  = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   var LONG  = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -894,7 +955,16 @@ textarea.sync {
   function goalOf(e)   { return e.m || 0; }
   function weekGoal(w) { return PLAN[w].reduce(function (s, e) { return s + goalOf(e); }, 0); }
 
-  var TOTAL = PLAN.reduce(function (s, _, i) { return s + weekGoal(i); }, 0);   // 206.4
+  var TOTAL = 0;
+
+  function raceDow() {                     /* 0 = Mon … 6 = Sun */
+    return (parseISO(S.race).getDay() + 6) % 7;
+  }
+  function rebuildPlan() {
+    var dow = raceDow();
+    PLAN[11] = W12_TAPER.slice(W12_TAPER.length - dow).concat([HALF]);
+    TOTAL = PLAN.reduce(function (s, _, i) { return s + weekGoal(i); }, 0);
+  }
 
   function labelOf(e) {
     if (e.t === "rest")  return "Rest";
@@ -939,14 +1009,16 @@ textarea.sync {
     return new Date(+p[0], +p[1] - 1, +p[2]);
   }
 
+  var DEFAULT_RACE = "2026-11-26";
+
   function blankRunner(name) {
-    return { name: name, log: {}, cheered: {} };
+    return { name: name, log: {}, cheered: {}, order: {} };
   }
   function freshState() {
     return {
-      start: mondayOfThisWeek(),
+      race: DEFAULT_RACE,
       active: 0,
-      runners: [blankRunner("Me"), blankRunner("Husband")]
+      runners: [blankRunner("Kylie"), blankRunner("Caleb")]
     };
   }
 
@@ -963,8 +1035,9 @@ textarea.sync {
       s.runners.forEach(function (r) {
         if (!r.log) r.log = {};
         if (!r.cheered) r.cheered = {};
+        if (!r.order) r.order = {};
       });
-      if (!s.start) s.start = mondayOfThisWeek();
+      if (!s.race) s.race = DEFAULT_RACE;
       s.active = s.active === 1 ? 1 : 0;
       return s;
     } catch (e) {
@@ -980,6 +1053,29 @@ textarea.sync {
   function milesFor(r, w, d) { var e = entryFor(r, w, d); return e && e.mi ? e.mi : 0; }
   function doneFor(r, w, d)  { var e = entryFor(r, w, d); return !!(e && e.done); }
 
+  /* A week's workouts can be shuffled onto different days. order[w][slot] says
+     which of that week's workouts sits on the given calendar slot. Logged miles
+     stay attached to the date they were run, never to the workout. */
+  function orderOf(r, w) {
+    var n = PLAN[w].length;
+    var o = r.order && r.order[w];
+    if (!o || o.length !== n) {
+      o = [];
+      for (var i = 0; i < n; i++) o.push(i);
+    }
+    return o;
+  }
+  function entryAt(r, w, slot) { return PLAN[w][orderOf(r, w)[slot]]; }
+  function isShuffled(r, w) {
+    return orderOf(r, w).some(function (v, i) { return v !== i; });
+  }
+  function swapDays(r, w, a, b) {
+    var o = orderOf(r, w).slice(), t = o[a];
+    o[a] = o[b]; o[b] = t;
+    r.order = r.order || {};
+    r.order[w] = o;
+  }
+
   function totalMiles(r) {
     var t = 0;
     for (var k in r.log) if (r.log[k] && r.log[k].mi) t += r.log[k].mi;
@@ -991,21 +1087,29 @@ textarea.sync {
     return t;
   }
 
+  /* Week 1 Monday is derived: the Monday of race week, then 11 weeks back. */
+  function startDate() {
+    var d = parseISO(S.race);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - raceDow() - 77);
+    return d;
+  }
+  function lastDayIndex() { return 77 + raceDow(); }
+
   /* Where are we in the plan today? Returns {w, d, before, after, dayIndex} */
   function position() {
     var today = new Date(); today.setHours(0, 0, 0, 0);
-    var start = parseISO(S.start); start.setHours(0, 0, 0, 0);
-    var i = Math.round((today - start) / 86400000);
+    var i = Math.round((today - startDate()) / 86400000);
     return {
       dayIndex: i,
       w: Math.max(0, Math.min(11, Math.floor(i / 7))),
       d: ((i % 7) + 7) % 7,
       before: i < 0,
-      after: i > 83
+      after: i > lastDayIndex()
     };
   }
   function dateOf(w, d) {
-    var s = parseISO(S.start);
+    var s = startDate();
     s.setDate(s.getDate() + w * 7 + d);
     return s;
   }
@@ -1018,8 +1122,14 @@ textarea.sync {
      THE LITTLE GUY
      ===================================================================== */
 
-  function runnerSVG(scale) {
+  function runnerSVG(scale, style) {
     var s = scale || 1;
+    var prop = style === "cap"
+      ? '<g class="prop">' +
+          '<rect class="cap-crown" x="10.0" y="0.5" width="8.0" height="3.5" rx="1.75"/>' +
+          '<rect class="cap-brim"  x="13.8" y="3.2" width="7.4" height="1.4" rx=".7"/>' +
+        '</g>'
+      : '<g class="prop"><ellipse class="pony" cx="9.3" cy="6.9" rx="2.9" ry="1.5"/></g>';
     /* Narrow torso, long limbs pivoting from shoulder and hip — the limbs have
        to swing clear of the torso or the silhouette reads as a blob. */
     return '' +
@@ -1030,15 +1140,24 @@ textarea.sync {
           '<rect class="torso" x="11.9" y="10" width="4.2" height="11.4" rx="2.1"/>' +
           '<rect class="lim leg-f" x="12.4" y="20"   width="2.9" height="13"  rx="1.45"/>' +
           '<rect class="lim arm-f" x="12.7" y="11.4" width="2.4" height="9.6" rx="1.2"/>' +
+          (style === "cap" ? '' : prop) +
           '<circle class="head" cx="14" cy="5.6" r="4.1"/>' +
+          (style === "cap" ? prop : '') +
         '</g>' +
       '</svg>';
   }
 
-  /* Drop the character into each bar once, at load. */
-  document.getElementById("r-day").innerHTML  = runnerSVG(1);
-  document.getElementById("r-week").innerHTML = runnerSVG(0.6);
-  document.getElementById("r-all").innerHTML  = runnerSVG(0.6);
+  /* Kylie runs with a ponytail, Caleb in a cap. Only re-inject when the active
+     runner changes, so switching profiles doesn't restart the running cycle. */
+  var shownStyle = null;
+  function ensureRunners() {
+    var style = S.active === 0 ? "pony" : "cap";
+    if (style === shownStyle) return;
+    shownStyle = style;
+    document.getElementById("r-day").innerHTML  = runnerSVG(1, style);
+    document.getElementById("r-week").innerHTML = runnerSVG(0.6, style);
+    document.getElementById("r-all").innerHTML  = runnerSVG(0.6, style);
+  }
 
   function setRunner(slotId, state, cheer) {
     var el = document.getElementById(slotId).querySelector(".runner");
@@ -1109,9 +1228,10 @@ textarea.sync {
     opts = opts || {};
     var r = me();
     var p = position();
+    ensureRunners();
 
     /* --- countdown ------------------------------------------------- */
-    var race = dateOf(11, 6);
+    var race = dateOf(11, raceDow());
     var today = new Date(); today.setHours(0, 0, 0, 0);
     var togo = Math.round((race - today) / 86400000);
     var cd = document.getElementById("countdown");
@@ -1139,7 +1259,8 @@ textarea.sync {
     /* --- the three bars -------------------------------------------- */
     var todayW = p.before ? 0 : p.w;
     var todayD = p.before ? 0 : p.d;
-    var tEntry = PLAN[todayW][todayD];
+    if (todayD >= PLAN[todayW].length) todayD = PLAN[todayW].length - 1;  /* days after a mid-week race */
+    var tEntry = entryAt(r, todayW, todayD);
     var tGoal  = goalOf(tEntry);
     var tDone  = milesFor(r, todayW, todayD);
     var tRatio = tGoal > 0 ? tDone / tGoal : (doneFor(r, todayW, todayD) || tDone > 0 ? 1 : 0);
@@ -1150,7 +1271,7 @@ textarea.sync {
                  : tRatio >= 1 ? "done" : tRatio > 0 ? "run" : "idle";
     setRunner("r-day", dayState, opts.cheer === "day");
     document.getElementById("n-day").innerHTML =
-      p.before ? "Plan starts " + MONTH[parseISO(S.start).getMonth()] + " " + parseISO(S.start).getDate() + "."
+      p.before ? "Plan starts " + MONTH[startDate().getMonth()] + " " + startDate().getDate() + "."
       : p.after ? "Plan finished. Every mile logged still counts below."
       : "<b>" + LONG[todayD] + "</b> · Week " + (todayW + 1) + " · " + labelOf(tEntry);
 
@@ -1177,7 +1298,13 @@ textarea.sync {
     renderVersus();
     renderTable();
 
-    document.getElementById("in-start").value = S.start;
+    document.getElementById("in-race").value = S.race;
+    var st = startDate();
+    document.getElementById("start-note").textContent =
+      "Week 1 starts Monday " + MONTH[st.getMonth()] + " " + st.getDate() + ". " +
+      "Race day is " + LONG[raceDow()] + ", so week 12 runs Monday to " + LONG[raceDow()] + ".";
+    document.getElementById("total-note").textContent =
+      fmt(TOTAL) + " miles between Week 1 Monday and the finish line.";
     document.getElementById("in-n1").value = S.runners[0].name;
     document.getElementById("in-n2").value = S.runners[1].name;
   }
@@ -1195,7 +1322,7 @@ textarea.sync {
 
   function renderDay() {
     var r = me();
-    var e = PLAN[viewWeek][selDay];
+    var e = entryAt(r, viewWeek, selDay);
     var d = dateOf(viewWeek, selDay);
     var goal = goalOf(e);
     var logged = milesFor(r, viewWeek, selDay);
@@ -1275,6 +1402,8 @@ textarea.sync {
       }
     }
 
+    renderSwap();
+
     if (logged > 0 || done) {
       var clr = document.createElement("button");
       clr.className = "btn btn-quiet spacer";
@@ -1285,6 +1414,52 @@ textarea.sync {
         render();
       };
       box.appendChild(clr);
+    }
+  }
+
+  /* Move a workout onto a different day of the same week. Miles already logged
+     stay on the date they were run — only the plan moves. */
+  function renderSwap() {
+    var r = me();
+    var box = document.getElementById("swap");
+    box.innerHTML = "";
+    var n = PLAN[viewWeek].length;
+    if (n < 2) return;
+
+    var lab = document.createElement("span");
+    lab.className = "swap-label";
+    lab.textContent = "Move this to";
+    box.appendChild(lab);
+
+    for (var d = 0; d < n; d++) {
+      (function (d) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "day-btn" + (d === selDay ? " is-here" : "");
+        b.textContent = DAYS[d];
+        b.disabled = d === selDay;
+        b.title = d === selDay ? "Already here"
+                : "Swap with " + labelOf(entryAt(r, viewWeek, d));
+        b.onclick = function () {
+          swapDays(r, viewWeek, selDay, d);
+          selDay = d;                     /* follow the workout to its new day */
+          save();
+          render();
+        };
+        box.appendChild(b);
+      })(d);
+    }
+
+    if (isShuffled(r, viewWeek)) {
+      var undo = document.createElement("button");
+      undo.className = "btn btn-quiet";
+      undo.textContent = "Reset week";
+      undo.onclick = function () {
+        if (r.order) delete r.order[viewWeek];
+        save();
+        render();
+      };
+      box.appendChild(undo);
     }
   }
 
@@ -1329,7 +1504,7 @@ textarea.sync {
 
     /* Only mileage earns the full celebration. Cross-training gets a nod,
        and resting is not an achievement to throw confetti at. */
-    var e = PLAN[viewWeek][selDay];
+    var e = entryAt(r, viewWeek, selDay);
     var goal = goalOf(e);
     var dk = "d" + viewWeek + ":" + selDay;
     if (goal > 0 && milesFor(r, viewWeek, selDay) >= goal && !r.cheered[dk]) {
@@ -1369,12 +1544,14 @@ textarea.sync {
   function renderStrip() {
     var r = me();
     document.getElementById("strip-label").textContent =
-      "Week " + (viewWeek + 1) + " · " + fmt(weekMiles(r, viewWeek)) + " of " + fmt(weekGoal(viewWeek)) + " mi";
+      "Week " + (viewWeek + 1) + " · " + fmt(weekMiles(r, viewWeek)) + " of " + fmt(weekGoal(viewWeek)) + " mi" +
+      (isShuffled(r, viewWeek) ? " · rearranged" : "");
 
     var strip = document.getElementById("strip");
     strip.innerHTML = "";
 
-    PLAN[viewWeek].forEach(function (e, d) {
+    PLAN[viewWeek].forEach(function (_ignored, d) {
+      var e = entryAt(r, viewWeek, d);
       var goal = goalOf(e);
       var mi = milesFor(r, viewWeek, d);
       var done = doneFor(r, viewWeek, d);
@@ -1432,7 +1609,8 @@ textarea.sync {
     PLAN.forEach(function (week, w) {
       body += "<tr" + (!p.before && !p.after && p.w === w ? " class='now'" : "") + ">";
       body += "<td class='wk'>" + (w + 1) + "</td>";
-      week.forEach(function (e, d) {
+      week.forEach(function (_ignored, d) {
+        var e = entryAt(r, w, d);
         var goal = goalOf(e);
         var mi = milesFor(r, w, d);
         var met = goal > 0 ? mi >= goal : doneFor(r, w, d);
@@ -1440,6 +1618,7 @@ textarea.sync {
                 labelOf(e).replace(" mi run or cross", " mi/x").replace(" mi run", " mi").replace(" min cross", "m x").replace("Rest or easy run", "rest/easy") +
                 "</td>";
       });
+      for (var pad = week.length; pad < 7; pad++) body += "<td></td>";   /* short final week */
       body += "<td class='total'>" + fmt(weekMiles(r, w)) + " / " + fmt(weekGoal(w)) + "</td>";
       body += "</tr>";
     });
@@ -1474,6 +1653,7 @@ textarea.sync {
     var p = position();
     viewWeek = p.before ? 0 : p.w;
     selDay = p.before ? 0 : p.d;
+    if (selDay >= PLAN[viewWeek].length) selDay = PLAN[viewWeek].length - 1;
     render();
   }
 
@@ -1485,14 +1665,19 @@ textarea.sync {
   };
   document.getElementById("wk-today").onclick = jumpToToday;
 
-  document.getElementById("in-start").onchange = function (ev) {
-    if (ev.target.value) { S.start = ev.target.value; save(); jumpToToday(); }
+  document.getElementById("in-race").onchange = function (ev) {
+    if (ev.target.value) {
+      S.race = ev.target.value;
+      rebuildPlan();
+      save();
+      jumpToToday();
+    }
   };
   document.getElementById("in-n1").oninput = function (ev) {
-    S.runners[0].name = ev.target.value || "Runner 1"; save(); render();
+    S.runners[0].name = ev.target.value || "Kylie"; save(); render();
   };
   document.getElementById("in-n2").oninput = function (ev) {
-    S.runners[1].name = ev.target.value || "Runner 2"; save(); render();
+    S.runners[1].name = ev.target.value || "Caleb"; save(); render();
   };
 
   document.getElementById("b-copy").onclick = function () {
@@ -1514,7 +1699,8 @@ textarea.sync {
       if (!next || !Array.isArray(next.runners) || next.runners.length !== 2) throw 0;
       S = next;
       S.runners.forEach(function (rr) { rr.log = rr.log || {}; rr.cheered = rr.cheered || {}; });
-      if (!S.start) S.start = mondayOfThisWeek();
+      if (!S.race) S.race = DEFAULT_RACE;
+      rebuildPlan();
       save();
       box.value = "";
       jumpToToday();
@@ -1527,10 +1713,12 @@ textarea.sync {
   document.getElementById("b-reset").onclick = function () {
     if (!confirm("Erase both runners' logged miles and start over? This can't be undone.")) return;
     S = freshState();
+    rebuildPlan();
     save();
     jumpToToday();
   };
 
+  rebuildPlan();
   jumpToToday();
 })();
 </script>
