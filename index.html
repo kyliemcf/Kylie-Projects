@@ -321,22 +321,20 @@ body {
   filter: drop-shadow(0 0 1px var(--runner-edge)) drop-shadow(0 0 1px var(--runner-edge));
 }
 .runner .torso, .runner .head, .runner .lim, .runner .prop > * { fill: var(--runner-fill); }
-.runner .eye { fill: var(--face); }
-.runner .smile { fill: none; stroke: var(--face); stroke-width: .85; stroke-linecap: round; }
-.runner[data-size="sm"] .face { display: none; }   /* too small to read cleanly */
 
 .runner .arm-f, .runner .arm-b { transform-origin: 50% 6%; }
 .runner .leg-f, .runner .leg-b { transform-origin: 50% 4%; }
 
-/* Kylie's ponytail is built to hang down and back already; it just pivots at
-   the tie so the whole tail swings as one. */
+/* Kylie's ponytail already hangs back and down; it just pivots at the tie so
+   the whole tail swings as one piece. */
 .runner .tail {
   transform-box: fill-box;
-  transform-origin: 88% 2%;
+  transform-origin: 90% 4%;
 }
 .runner[data-state="run"] .tail { animation: swish .42s ease-in-out infinite; }
 .runner.cheer .tail            { animation: swish .31s ease-in-out 6; }
-@keyframes swish { 0%, 100% { transform: rotate(-9deg); } 50% { transform: rotate(13deg); } }
+/* hangs at rest, streams back and bounces once she's moving */
+@keyframes swish { 0%, 100% { transform: rotate(19deg); } 50% { transform: rotate(43deg); } }
 
 /* running cycle */
 .runner[data-state="run"] .body-g   { animation: bob .42s linear infinite; }
@@ -373,8 +371,6 @@ body {
 .runner[data-state="done"] .lim,
 .runner[data-state="done"] .head,
 .runner[data-state="done"] .prop > * { fill: var(--mint-lit); }
-.runner[data-state="done"] .eye   { fill: #10322A; }
-.runner[data-state="done"] .smile { stroke: #10322A; }
 .runner[data-state="done"] .arm-f { transform: rotate(119deg); }
 .runner[data-state="done"] .arm-b { transform: rotate(-119deg); }
 .runner[data-state="done"] .leg-f { transform: rotate(12deg); }
@@ -482,7 +478,6 @@ body {
   white-space: nowrap;
 }
 .tag-run   { color: var(--accent); }
-.tag-cross { color: var(--cool); }
 .tag-rest  { color: var(--ink-3); }
 .tag-race  { color: var(--signal); }
 
@@ -660,7 +655,6 @@ body {
 .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--line-2); }
 
 .chip[data-kind="rest"] .chip-m { color: var(--ink-3); font-weight: 400; }
-.chip[data-kind="cross"] .chip-m { color: var(--cool); }
 .chip[data-kind="race"] .chip-m { color: var(--signal); }
 .chip[data-kind="race"] { background: color-mix(in srgb, var(--signal) 12%, var(--ground)); }
 .chip.met { background: color-mix(in srgb, var(--mint-lit) 20%, var(--surface)); border-color: color-mix(in srgb, var(--mint-lit) 55%, var(--line)); }
@@ -700,7 +694,6 @@ table.plan tr.now td.wk { color: var(--accent); font-weight: 700; }
 table.plan td.d { color: var(--ink); cursor: pointer; }
 table.plan td.d:hover { background: var(--sunken); }
 table.plan td.d.rest { color: var(--ink-3); }
-table.plan td.d.cross { color: var(--cool); }
 table.plan td.d.race { color: var(--signal); font-weight: 700; }
 table.plan td.d.met { color: var(--mint); font-weight: 700; }
 table.plan td.d.met::after { content: " ✓"; }
@@ -934,37 +927,37 @@ textarea.sync {
 
   /* =====================================================================
      THE PLAN — Hal Higdon, Novice 1 Half Marathon, 12 weeks.
-     Mon rest · Tue/Wed/Thu runs · Fri rest · Sat cross · Sun long run.
-     t: rest | run | opt (run-or-cross) | cross | easy (rest or easy run) | race
-     m = planned miles, min = planned cross-training minutes
+     t: rest | run | race     m = planned miles
      ===================================================================== */
 
-  var R    = { t: "rest" };
-  var run  = function (m) { return { t: "run", m: m }; };
-  var opt  = function (m) { return { t: "opt", m: m }; };
-  var xt   = function (min) { return { t: "cross", min: min }; };
-  var easy = { t: "easy" };
+  var R   = { t: "rest" };
+  var run = function (m) { return { t: "run", m: m }; };
 
+  /* Higdon's Novice 1 mileage, rearranged to be miles-only: his Wednesday
+     run-or-cross is just a run, his Thursday run moves to Friday, and the
+     Saturday cross-training is dropped. Weekly mileage is unchanged, since
+     the cross days never carried any.
+       Mon rest · Tue run · Wed run · Thu rest · Fri run · Sat rest · Sun long */
   var PLAN = [
-    [R, run(3),   opt(2), run(3),   R, xt(30), run(4)],
-    [R, run(3),   opt(2), run(3),   R, xt(30), run(4)],
-    [R, run(3.5), opt(2), run(3.5), R, xt(40), run(5)],
-    [R, run(3.5), opt(2), run(3.5), R, xt(40), run(5)],
-    [R, run(4),   opt(2), run(4),   R, xt(40), run(6)],
-    [R, run(4),   opt(2), run(4),   R, easy,   { t: "race", m: 3.1,  name: "5-K Race" }],
-    [R, run(4.5), opt(3), run(4.5), R, xt(50), run(7)],
-    [R, run(4.5), opt(3), run(4.5), R, xt(50), run(8)],
-    [R, run(5),   opt(3), run(5),   R, easy,   { t: "race", m: 6.2,  name: "10-K Race" }],
-    [R, run(5),   opt(3), run(5),   R, xt(60), run(9)],
-    [R, run(5),   opt(3), run(5),   R, xt(60), run(10)],
+    [R, run(3),   run(2), R, run(3),   R, run(4)],
+    [R, run(3),   run(2), R, run(3),   R, run(4)],
+    [R, run(3.5), run(2), R, run(3.5), R, run(5)],
+    [R, run(3.5), run(2), R, run(3.5), R, run(5)],
+    [R, run(4),   run(2), R, run(4),   R, run(6)],
+    [R, run(4),   run(2), R, run(4),   R, { t: "race", m: 3.1, name: "5-K Race" }],
+    [R, run(4.5), run(3), R, run(4.5), R, run(7)],
+    [R, run(4.5), run(3), R, run(4.5), R, run(8)],
+    [R, run(5),   run(3), R, run(5),   R, { t: "race", m: 6.2, name: "10-K Race" }],
+    [R, run(5),   run(3), R, run(5),   R, run(9)],
+    [R, run(5),   run(3), R, run(5),   R, run(10)],
     []                                    /* week 12 — shaped by the race weekday */
   ];
 
-  /* Higdon runs the final week Mon-Sat easy and races Sunday. When race day
-     falls on another weekday, weeks 1-11 stay on their Mon-Sun grid (long runs
-     belong on the weekend) and week 12 is the tail of his taper, so the days
-     immediately before the race are exactly the ones he prescribes. */
-  var W12_TAPER = [R, run(4), opt(3), run(2), R, R];
+  /* Higdon runs the final week down and races Sunday. When race day falls on
+     another weekday, weeks 1-11 stay on their Mon-Sun grid (long runs belong on
+     the weekend) and week 12 is the tail of his taper, so the days immediately
+     before the race are exactly the ones he prescribes. */
+  var W12_TAPER = [R, run(4), run(3), R, run(2), R];
   var HALF = { t: "race", m: 13.1, name: "Half Marathon" };
 
   var DAYS  = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -986,24 +979,17 @@ textarea.sync {
   }
 
   function labelOf(e) {
-    if (e.t === "rest")  return "Rest";
-    if (e.t === "easy")  return "Rest or easy run";
-    if (e.t === "cross") return e.min + " min cross";
-    if (e.t === "race")  return e.name;
-    if (e.t === "opt")   return e.m + " mi run or cross";
+    if (e.t === "rest") return "Rest";
+    if (e.t === "race") return e.name;
     return e.m + " mi run";
   }
   function shortOf(e) {
-    if (e.t === "rest")  return "rest";
-    if (e.t === "easy")  return "easy";
-    if (e.t === "cross") return e.min + "m";
-    if (e.t === "race")  return e.m;
+    if (e.t === "rest") return "rest";
     return e.m;
   }
   function kindOf(e) {
-    if (e.t === "race")  return "race";
-    if (e.t === "cross") return "cross";
-    if (e.t === "rest" || e.t === "easy") return "rest";
+    if (e.t === "race") return "race";
+    if (e.t === "rest") return "rest";
     return "run";
   }
 
@@ -1141,7 +1127,7 @@ textarea.sync {
      THE LITTLE GUY
      ===================================================================== */
 
-  function runnerSVG(scale, style, small) {
+  function runnerSVG(scale, style) {
     var z = scale || 1;
     var prop = style === "cap"
       ? '<g class="prop">' +
@@ -1149,25 +1135,18 @@ textarea.sync {
           '<rect class="cap-brim"  x="16.2" y="5.9" width="8.8"  height="1.9" rx=".95"/>' +
         '</g>'
       : '<g class="prop">' +
-          '<g class="tail">' +                       /* overlapping so it reads as one tapering tail */
-            '<circle cx="10.6" cy="10.6" r="2.00"/>' +
-            '<circle cx="9.2"  cy="12.9" r="1.75"/>' +
-            '<circle cx="8.0"  cy="15.0" r="1.45"/>' +
-            '<circle cx="7.1"  cy="16.9" r="1.15"/>' +
-            '<circle cx="6.5"  cy="18.5" r="0.85"/>' +
+          /* a lobe hanging behind and below the head, tapering as it falls.
+             The inner rotate() angles it; the group carries the swish. */
+          '<g class="tail">' +
+            '<ellipse cx="10.0" cy="13.0" rx="2.65" ry="3.7" transform="rotate(17 10 13)"/>' +
+            '<ellipse cx="8.5"  cy="18.1" rx="1.75" ry="2.7" transform="rotate(17 8.5 18.1)"/>' +
           '</g>' +
-          '<circle class="tie" cx="11.7" cy="8.5" r="1.75"/>' +
+          '<circle class="tie" cx="12.1" cy="9.4" r="1.85"/>' +
         '</g>';
-
-    var face = '<g class="face">' +
-        '<circle class="eye" cx="17.9" cy="10.2" r="1.15"/>' +
-        '<circle class="eye" cx="21.0" cy="10.2" r="1.15"/>' +
-        '<path class="smile" d="M18.3 13.1 q1.6 1.5 3.2 0"/>' +
-      '</g>';
 
     return '' +
       '<svg class="runner" width="' + (32 * z) + '" height="' + (38 * z) + '" viewBox="0 0 32 38"' +
-        ' data-state="idle" data-size="' + (small ? "sm" : "lg") + '" aria-hidden="true">' +
+        ' data-state="idle" aria-hidden="true">' +
         '<g class="body-g">' +
           '<rect class="lim arm-b" x="15.2" y="15.6" width="2.7" height="8.2" rx="1.35"/>' +
           '<rect class="lim leg-b" x="14.9" y="22.4" width="3.2" height="10.4" rx="1.6"/>' +
@@ -1177,7 +1156,6 @@ textarea.sync {
           '<rect class="lim arm-f" x="15.2" y="15.6" width="2.7" height="8.2" rx="1.35"/>' +
           '<circle class="head" cx="16.6" cy="9.4" r="6.6"/>' +
           (style === "cap" ? prop : '') +
-          face +
         '</g>' +
       '</svg>';
   }
@@ -1188,8 +1166,8 @@ textarea.sync {
     if (style === shownStyle) return;
     shownStyle = style;
     document.getElementById("r-day").innerHTML  = runnerSVG(1.5, style);
-    document.getElementById("r-week").innerHTML = runnerSVG(0.62, style, true);
-    document.getElementById("r-all").innerHTML  = runnerSVG(0.62, style, true);
+    document.getElementById("r-week").innerHTML = runnerSVG(0.62, style);
+    document.getElementById("r-all").innerHTML  = runnerSVG(0.62, style);
   }
 
   function setRunner(slotId, state, cheer) {
@@ -1372,7 +1350,7 @@ textarea.sync {
     var tag = document.getElementById("d-tag");
     var k = kindOf(e);
     tag.className = "tag tag-" + k;
-    tag.textContent = k === "race" ? "Race" : k === "cross" ? "Cross-train" : k === "rest" ? "Recover" : "Run";
+    tag.textContent = k === "race" ? "Race" : k === "rest" ? "Recover" : "Run";
 
     var box = document.getElementById("logger");
     box.innerHTML = "";
@@ -1401,20 +1379,11 @@ textarea.sync {
       full.onclick = function () { commit(goal); };
       box.appendChild(full);
 
-      if (e.t === "opt") {
-        var xbtn = document.createElement("button");
-        xbtn.className = "btn";
-        xbtn.setAttribute("aria-pressed", done && !logged ? "true" : "false");
-        xbtn.textContent = "Crossed instead";
-        xbtn.onclick = function () { markDone(!(done && !logged), 0); };
-        box.appendChild(xbtn);
-      }
     } else {
       var mark = document.createElement("button");
       mark.className = "btn " + (done ? "" : "btn-go");
       mark.setAttribute("aria-pressed", done ? "true" : "false");
-      mark.textContent = done ? "✓ Done" :
-        (e.t === "cross" ? "Mark " + e.min + " min done" : e.t === "rest" ? "Rested" : "Mark done");
+      mark.textContent = done ? "✓ Done" : e.t === "rest" ? "Rested" : "Mark done";
       mark.onclick = function () { markDone(!done, logged); };
       box.appendChild(mark);
 
@@ -1537,8 +1506,8 @@ textarea.sync {
     var msgs = [];    // full celebration: toast + confetti + the little guy
     var quiet = [];   // just a toast
 
-    /* Only mileage earns the full celebration. Cross-training gets a nod,
-       and resting is not an achievement to throw confetti at. */
+    /* Only mileage earns a celebration — resting is on the plan, not an
+       achievement to throw confetti at. */
     var e = entryAt(r, viewWeek, selDay);
     var goal = goalOf(e);
     var dk = "d" + viewWeek + ":" + selDay;
@@ -1546,9 +1515,6 @@ textarea.sync {
       r.cheered[dk] = 1;
       cheer = "day";
       msgs.push(e.t === "race" ? e.name.toUpperCase() + " — DONE. 🏁" : pick(DAY_CHEERS));
-    } else if (e.t === "cross" && doneFor(r, viewWeek, selDay) && !r.cheered[dk]) {
-      r.cheered[dk] = 1;
-      quiet.push(e.min + " minutes cross-trained. Counts.");
     }
 
     var wk = "w" + viewWeek;
@@ -1650,7 +1616,7 @@ textarea.sync {
         var mi = milesFor(r, w, d);
         var met = goal > 0 ? mi >= goal : doneFor(r, w, d);
         body += "<td class='d " + kindOf(e) + (met ? " met" : "") + "' data-w='" + w + "' data-d='" + d + "'>" +
-                labelOf(e).replace(" mi run or cross", " mi/x").replace(" mi run", " mi").replace(" min cross", "m x").replace("Rest or easy run", "rest/easy") +
+                labelOf(e).replace(" mi run", " mi") +
                 "</td>";
       });
       for (var pad = week.length; pad < 7; pad++) body += "<td></td>";   /* short final week */

@@ -18,27 +18,21 @@ screen, and it behaves like an app.
 | This week | The week's running total against that week's plan |
 | All 12 weeks | Everything you've run against the full 199.4 |
 
-**A little runner on every bar.** It stands at your current progress and runs as
-you log miles. Hit a goal and it flings its arms out, turns mint green, and jumps
-while confetti goes off. Kylie's runner has a ponytail that swishes as she runs;
-Caleb's wears a cap. The big one on the today bar has a face; the small ones on
-the week and overall bars drop it, since it wouldn't read at that size. The
-character follows whichever profile is selected.
+**A little runner on every bar.** A plain stick figure — it stands at your current
+progress and runs as you log miles. Hit a goal and it flings its arms out, turns
+mint green, and jumps while confetti goes off. Kylie's has a ponytail that hangs
+at rest and streams back as she runs; Caleb's wears a cap. The character follows
+whichever profile is selected.
 
-The celebration is tiered on purpose:
-
-- **Runs and races** — confetti, the jumping runner, and a message
-- **Cross-training** — a quiet acknowledgement, no confetti
-- **Rest days** — nothing. Resting is on the plan, not an achievement
-
-Each goal celebrates exactly once, ever. It won't re-fire when you reload.
+Only mileage is celebrated. Rest days get nothing — resting is on the plan, not
+an achievement. Each goal celebrates exactly once, ever, and won't re-fire when
+you reload.
 
 **Two runners.** Switch between the two profiles at the top; each keeps its own
 log. The "Both of you" panel shows where you each stand this week and overall.
 
 **Log any day, not just today.** Tap any day in the week strip or anywhere in the
-full 12-week table to log or backfill it. Wednesdays are "run or cross" in this
-plan, so those days have a *Crossed instead* button.
+full 12-week table to log or backfill it.
 
 **Move workouts between days.** Life doesn't always match the grid. Select a day
 and use **Move this to** to swap that workout onto another day of the same week —
@@ -53,10 +47,20 @@ knowing:
 
 ## The plan
 
-Hal Higdon's Novice 1: Monday rest, runs Tuesday/Wednesday/Thursday, Friday rest,
-cross-training Saturday, long run Sunday. It builds from 3-mile runs in Week 1 to
-a 10-mile long run in Week 11, with a 5-K in Week 6 and a 10-K in Week 9, then
-tapers into race day.
+Hal Higdon's Novice 1 mileage, rearranged to be **miles only** — no
+cross-training anywhere:
+
+| Mon | Tue | Wed | Thu | Fri | Sat | Sun |
+| --- | --- | --- | --- | --- | --- | --- |
+| Rest | Run | Run | Rest | Run | Rest | Long run |
+
+Four runs a week, three rest days. Against Higdon's original that means his
+Wednesday "run or cross" is just a run, his Thursday run moves to Friday, and his
+Saturday cross-training is gone. **Weekly mileage is unchanged**, since the cross
+days never carried any miles to begin with.
+
+It builds from 3-mile runs in Week 1 to a 10-mile long run in Week 11, with a 5-K
+in Week 6 and a 10-K in Week 9, then tapers into race day.
 
 **Race day is a Thursday, and Higdon's plan races on a Sunday.** Rather than
 sliding the whole calendar (which would drag every long run onto a Thursday),
@@ -67,9 +71,7 @@ the days immediately before the race are exactly the ones he prescribes —
 
 Working back from November 26, **Week 1 Monday is September 7 2026**.
 
-Races count toward mileage at 3.1 / 6.2 / 13.1. Cross-training days are
-time-based, so they're marked done rather than adding miles — which is why a
-"complete" week can still be 100% with cross days on it.
+Races count toward mileage at 3.1 / 6.2 / 13.1.
 
 Source: <https://www.halhigdon.com/training-programs/half-marathon-training/novice-1-half-marathon/>
 
@@ -88,6 +90,9 @@ Open **Setup & sync** at the bottom.
   Week 1 Monday, which week you're in today, and the countdown. Change the date
   and the whole plan re-anchors, including the shape of week 12.
 - **Runner names** — rename the two profiles to whatever you like.
+
+Rest days can still be marked done, and any day accepts bonus miles if you run
+when the plan says rest — those count toward your weekly and overall totals.
 
 ## About syncing
 
