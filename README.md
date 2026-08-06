@@ -24,9 +24,19 @@ mint green, and jumps while confetti goes off. Kylie's has a ponytail that hangs
 at rest and streams back as she runs; Caleb's wears a cap. The character follows
 whichever profile is selected.
 
+**Hitting a goal throws a party.** Confetti erupts from the runner itself — or
+from the day card if you're backfilling an earlier day — arcing up and tumbling
+down, the bar flashes mint, the number pops, and a message slides in. Finishing a
+week or the whole plan gets a bigger, double burst.
+
+A goal celebrates every time you *cross* it, so clearing a day and re-logging it
+celebrates again. Piling extra miles on top of a goal you've already met doesn't
+re-fire, and neither does reloading the page — only the moment you go from unmet
+to met counts.
+
 Only mileage is celebrated. Rest days get nothing — resting is on the plan, not
-an achievement. Each goal celebrates exactly once, ever, and won't re-fire when
-you reload.
+an achievement. (Which is why opening the app on a rest day looks quiet: mark it
+*Rested* and it just ticks off.)
 
 **Two runners.** Switch between the two profiles at the top; each keeps its own
 log. The "Both of you" panel shows where you each stand this week and overall.
