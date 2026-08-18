@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<title>13.1 — Half Marathon Training</title>
+<title>Pace Ourselves</title>
 </head>
 <body>
 <style>
@@ -142,8 +142,8 @@ body {
 .home.off, .shell.off { display: none; }
 
 .home-card { width: 100%; max-width: 620px; text-align: center; }
-.home .wordmark { font-size: clamp(46px, 13vw, 68px); }
-.home .plan-name { margin-top: 8px; }
+.home .wordmark { font-size: clamp(42px, 12vw, 64px); line-height: .94; }
+.home .plan-name { margin-top: 14px; }
 .home-count {
   font-family: var(--f-round);
   font-size: 13px;
@@ -414,12 +414,13 @@ button.row:hover { background: var(--sunken); }
   font-family: var(--f-round);
   font-size: 30px;
   font-weight: 700;
-  letter-spacing: -.03em;
+  letter-spacing: -.035em;
   margin: 0;
   line-height: 1;
+  text-wrap: balance;
 }
 .wordmark span { color: var(--accent); }
-.masthead .plan-name {
+.plan-name {
   font-family: var(--f-round);
   font-size: 11px;
   letter-spacing: .1em;
@@ -1062,8 +1063,7 @@ textarea.sync {
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
 @media (max-width: 560px) {
-  .wordmark { font-size: 25px; }
-  .home .wordmark { font-size: clamp(46px, 13vw, 68px); }
+  .home .wordmark { font-size: clamp(42px, 12vw, 64px); }
   .topbar .countdown { font-size: 10.5px; }
   .who-swap { display: none; }
   .versus { grid-template-columns: 1fr; }
@@ -1079,8 +1079,8 @@ textarea.sync {
 <!-- ============ HOME · who's logging in ============ -->
 <section class="home" id="home">
   <div class="home-card">
-    <h1 class="wordmark">13<span>.</span>1</h1>
-    <p class="plan-name">Hal Higdon · Novice 1 · 12 weeks</p>
+    <h1 class="wordmark">Pace<br>Ourselves<span>.</span></h1>
+    <p class="plan-name">13.1 miles · Hal Higdon Novice 1 · 12 weeks</p>
     <p class="home-count" id="home-count"></p>
 
     <p class="home-ask">Who's running today?</p>

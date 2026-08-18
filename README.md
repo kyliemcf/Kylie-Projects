@@ -1,7 +1,7 @@
-# 13.1 — Half Marathon Training
+# Pace Ourselves
 
-A two-person training tracker for Kylie and Caleb, built around **Hal Higdon's
-Novice 1 half marathon program** — 12 weeks, 199.4 miles, ending at 13.1 on
+A two-person half marathon training app for Kylie and Caleb, built around **Hal
+Higdon's Novice 1 program** — 12 weeks, 199.4 miles, ending at 13.1 on
 **Thursday, November 26 2026**.
 
 It's a single self-contained `index.html`. No build step, no server, no account.
@@ -108,6 +108,9 @@ Races count toward mileage at 3.1 / 6.2 / 13.1.
 Source: <https://www.halhigdon.com/training-programs/half-marathon-training/novice-1-half-marathon/>
 
 ## The look
+
+The wordmark stacks **Pace / Ourselves.** over two lines and ends on a pink full
+stop; the 13.1 moves into the subtitle with the rest of the plan details.
 
 Strawberry and mint: blush grounds, a plum ink that's friendlier than black,
 strawberry-pink progress bars and a mint pay-off when a goal lands. Everything is
