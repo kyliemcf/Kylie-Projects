@@ -19,12 +19,15 @@ Three tabs along the bottom:
 
 | Tab | What's on it |
 | --- | --- |
-| **Log** | Today's mileage bar, the day you're logging, and the journal |
+| **Log** | Today's mileage bar *and* the whole-plan bar, the day you're logging, and the journal |
 | **Week** | This week's mileage bar, the seven-day strip, moving workouts between days, and a day-by-day breakdown |
 | **Plan** | Overall progress across all 12 weeks, both runners side by side, the full plan table, and setup |
 
-Each tab owns one of the three tracker bars — today, this week, all 12 weeks —
-so the number you're looking at always matches the screen you're on.
+The three tracker bars — today, this week, all 12 weeks — are spread across the
+tabs so the number matches the screen you're on, except the whole-plan bar, which
+appears on both Log and Plan: while you're logging a run it's useful to see the
+day's goal and how far through the 199.4 you are together. Both copies are the
+same meter and move in step.
 
 Everything cross-links: tap a day in the week strip or anywhere in the plan
 table and it opens on the Log tab ready to enter miles.

@@ -1108,16 +1108,30 @@ textarea.sync {
     <section class="view" id="view-log">
 
       <section class="card">
-        <div class="meter meter-daily" id="m-day">
-          <div class="meter-head">
-            <span class="meter-label">Today</span>
-            <span class="meter-val" id="v-day"></span>
+        <div class="meters">
+          <div class="meter meter-daily" data-meter="day">
+            <div class="meter-head">
+              <span class="meter-label">Today</span>
+              <span class="meter-val"></span>
+            </div>
+            <div class="track">
+              <div class="fill"></div>
+              <div class="runner-slot"></div>
+            </div>
+            <p class="meter-note"></p>
           </div>
-          <div class="track">
-            <div class="fill" id="f-day"></div>
-            <div class="runner-slot" id="r-day"></div>
+
+          <div class="meter" data-meter="all">
+            <div class="meter-head">
+              <span class="meter-label">All 12 weeks</span>
+              <span class="meter-val"></span>
+            </div>
+            <div class="track">
+              <div class="fill"></div>
+              <div class="runner-slot"></div>
+            </div>
+            <p class="meter-note"></p>
           </div>
-          <p class="meter-note" id="n-day"></p>
         </div>
       </section>
 
@@ -1155,16 +1169,16 @@ textarea.sync {
     <section class="view" id="view-week">
 
       <section class="card">
-        <div class="meter" id="m-week">
+        <div class="meter" data-meter="week">
           <div class="meter-head">
-            <span class="meter-label" id="l-week">This week</span>
-            <span class="meter-val" id="v-week"></span>
+            <span class="meter-label">This week</span>
+            <span class="meter-val"></span>
           </div>
           <div class="track">
-            <div class="fill" id="f-week"></div>
-            <div class="runner-slot" id="r-week"></div>
+            <div class="fill"></div>
+            <div class="runner-slot"></div>
           </div>
-          <p class="meter-note" id="n-week"></p>
+          <p class="meter-note"></p>
         </div>
       </section>
 
@@ -1194,16 +1208,16 @@ textarea.sync {
     <section class="view" id="view-plan">
 
       <section class="card">
-        <div class="meter" id="m-all">
+        <div class="meter" data-meter="all">
           <div class="meter-head">
             <span class="meter-label">All 12 weeks</span>
-            <span class="meter-val" id="v-all"></span>
+            <span class="meter-val"></span>
           </div>
           <div class="track">
-            <div class="fill" id="f-all"></div>
-            <div class="runner-slot" id="r-all"></div>
+            <div class="fill"></div>
+            <div class="runner-slot"></div>
           </div>
-          <p class="meter-note" id="n-all"></p>
+          <p class="meter-note"></p>
         </div>
       </section>
 
@@ -1509,25 +1523,45 @@ textarea.sync {
   }
 
   var shownStyle = null;
+  /* The same meter can appear on more than one screen — the whole-plan bar sits
+     on both Log and Plan — so meters are addressed by kind, not by id, and every
+     instance is kept in step. */
+  function meters(kind) { return document.querySelectorAll('[data-meter="' + kind + '"]'); }
+  function eachMeter(kind, fn) { Array.prototype.forEach.call(meters(kind), fn); }
+
   function ensureRunners() {
     var style = S.active === 1 ? "cap" : "pony";
     if (style === shownStyle) return;
     shownStyle = style;
-    document.getElementById("r-day").innerHTML  = runnerSVG(1.5, style);
-    document.getElementById("r-week").innerHTML = runnerSVG(0.62, style);
-    document.getElementById("r-all").innerHTML  = runnerSVG(0.62, style);
+    Array.prototype.forEach.call(document.querySelectorAll("[data-meter] .runner-slot"), function (slot) {
+      var kind = slot.parentNode.parentNode.getAttribute("data-meter");
+      slot.innerHTML = runnerSVG(kind === "day" ? 1.5 : 0.62, style);
+    });
   }
 
-  function setRunner(slotId, state, cheer) {
-    var el = document.getElementById(slotId).querySelector(".runner");
-    if (!el) return;
-    el.setAttribute("data-state", state);
-    if (cheer) {
-      el.classList.remove("cheer");
-      void el.offsetWidth;           // restart the animation
-      el.classList.add("cheer");
-      setTimeout(function () { el.classList.remove("cheer"); }, 2200);
-    }
+  function setRunner(kind, state, cheer) {
+    eachMeter(kind, function (m) {
+      var el = m.querySelector(".runner");
+      if (!el) return;
+      el.setAttribute("data-state", state);
+      if (cheer) {
+        el.classList.remove("cheer");
+        void el.offsetWidth;           // restart the animation
+        el.classList.add("cheer");
+        setTimeout(function () { el.classList.remove("cheer"); }, 2200);
+      }
+    });
+  }
+
+  /* For a burst we want the copy the reader is actually looking at. */
+  function shownRunner(kind) {
+    var found = null;
+    eachMeter(kind, function (m) {
+      if (found) return;
+      var v = m.closest ? m.closest(".view") : null;
+      if (!v || v.classList.contains("on")) found = m.querySelector(".runner");
+    });
+    return found;
   }
 
   /* Confetti erupts from the runner that just finished, so the character and
@@ -1571,12 +1605,12 @@ textarea.sync {
 
   /* A pulse of light off the bar that just filled. */
   function pulse(kind) {
-    var m = document.getElementById("m-" + kind);
-    if (!m) return;
-    m.classList.remove("just-hit");
-    void m.offsetWidth;
-    m.classList.add("just-hit");
-    setTimeout(function () { m.classList.remove("just-hit"); }, 1400);
+    eachMeter(kind, function (m) {
+      m.classList.remove("just-hit");
+      void m.offsetWidth;
+      m.classList.add("just-hit");
+      setTimeout(function () { m.classList.remove("just-hit"); }, 1400);
+    });
   }
 
   function party(kind) {
@@ -1587,7 +1621,7 @@ textarea.sync {
     if (onTodayBar) pulse(kind);
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var slot = onTodayBar ? document.getElementById("r-" + kind)
+    var slot = onTodayBar ? shownRunner(kind)
                           : document.getElementById("d-title");
     var big  = kind === "all" ? 130 : kind === "week" ? 95 : 62;
     burst(slot, big);
@@ -1740,12 +1774,12 @@ textarea.sync {
 
     bar("day", ratio, goal > 0 ? fmt(done) + '<span class="of"> / ' + fmt(goal) + " mi</span>"
                                : (ratio >= 1 ? "Done" : labelOf(e)));
-    setRunner("r-day", goal === 0 ? (ratio >= 1 ? "done" : "rest")
-                     : ratio >= 1 ? "done" : ratio > 0 ? "run" : "idle", opts.cheer === "day");
-    document.getElementById("n-day").innerHTML =
+    setRunner("day", goal === 0 ? (ratio >= 1 ? "done" : "rest")
+                   : ratio >= 1 ? "done" : ratio > 0 ? "run" : "idle", opts.cheer === "day");
+    meterNote("day",
       t.p.before ? "Plan starts " + MONTH[startDate().getMonth()] + " " + startDate().getDate() + "."
       : t.p.after ? "Plan finished. Every mile logged still counts."
-      : "<b>" + LONG[t.d] + "</b> · Week " + (t.w + 1) + " · " + labelOf(e);
+      : "<b>" + LONG[t.d] + "</b> · Week " + (t.w + 1) + " · " + labelOf(e));
   }
 
   function renderWeekMeter(opts) {
@@ -1754,22 +1788,21 @@ textarea.sync {
     var goal = weekGoal(w), done = weekMiles(r, w);
     bar("week", goal > 0 ? done / goal : 0,
         fmt(done) + '<span class="of"> / ' + fmt(goal) + " mi</span>");
-    document.getElementById("l-week").textContent =
-      "Week " + (w + 1) + " of 12" + (w === todaySlot().w ? " · this week" : "");
-    setRunner("r-week", done >= goal ? "done" : done > 0 ? "run" : "idle", opts.cheer === "week");
+    meterLabel("week", "Week " + (w + 1) + " of 12" + (w === todaySlot().w ? " · this week" : ""));
+    setRunner("week", done >= goal ? "done" : done > 0 ? "run" : "idle", opts.cheer === "week");
     var left = goal - done;
-    document.getElementById("n-week").innerHTML = left > 0.05
+    meterNote("week", left > 0.05
       ? "<b>" + fmt(left) + " mi</b> still to run this week"
-      : "Week complete.";
+      : "Week complete.");
   }
 
   function renderAllMeter(opts) {
     var done = totalMiles(me());
     bar("all", done / TOTAL, fmt(done) + '<span class="of"> / ' + fmt(TOTAL) + " mi</span>");
-    setRunner("r-all", done >= TOTAL ? "done" : done > 0 ? "run" : "idle", opts.cheer === "all");
-    document.getElementById("n-all").innerHTML = done >= TOTAL
+    setRunner("all", done >= TOTAL ? "done" : done > 0 ? "run" : "idle", opts.cheer === "all");
+    meterNote("all", done >= TOTAL
       ? "Every mile in the plan. 🏅"
-      : "<b>" + fmt(TOTAL - done) + " mi</b> to go across the whole plan";
+      : "<b>" + fmt(TOTAL - done) + " mi</b> to go across the whole plan");
   }
 
   /* --- the journal ---------------------------------------------------- */
@@ -1943,14 +1976,22 @@ textarea.sync {
     render();
   }
 
-  function bar(id, ratio, valHTML) {
+  function bar(kind, ratio, valHTML) {
     var pct = Math.max(0, Math.min(1, ratio));
-    document.getElementById("f-" + id).style.width = (pct * 100) + "%";
-    document.getElementById("r-" + id).style.left  = (pct * 100) + "%";
-    document.getElementById("m-" + id).classList.toggle("is-over", ratio > 1.001);
-    document.getElementById("m-" + id).classList.toggle("is-done", ratio >= 1);
-    document.getElementById("v-" + id).innerHTML =
-      valHTML + '<span class="pct">' + Math.round(ratio * 100) + "%</span>";
+    eachMeter(kind, function (m) {
+      m.querySelector(".fill").style.width = (pct * 100) + "%";
+      m.querySelector(".runner-slot").style.left = (pct * 100) + "%";
+      m.classList.toggle("is-over", ratio > 1.001);
+      m.classList.toggle("is-done", ratio >= 1);
+      m.querySelector(".meter-val").innerHTML =
+        valHTML + '<span class="pct">' + Math.round(ratio * 100) + "%</span>";
+    });
+  }
+  function meterNote(kind, html) {
+    eachMeter(kind, function (m) { m.querySelector(".meter-note").innerHTML = html; });
+  }
+  function meterLabel(kind, text) {
+    eachMeter(kind, function (m) { m.querySelector(".meter-label").textContent = text; });
   }
 
   /* --- selected day card ------------------------------------------- */
