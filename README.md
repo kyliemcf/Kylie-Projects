@@ -19,7 +19,7 @@ Three tabs along the bottom:
 
 | Tab | What's on it |
 | --- | --- |
-| **Log** | Today's mileage bar, the day you're logging, and a running history of everything you've run |
+| **Log** | Today's mileage bar, the day you're logging, and the journal |
 | **Week** | This week's mileage bar, the seven-day strip, moving workouts between days, and a day-by-day breakdown |
 | **Plan** | Overall progress across all 12 weeks, both runners side by side, the full plan table, and setup |
 
@@ -28,6 +28,17 @@ so the number you're looking at always matches the screen you're on.
 
 Everything cross-links: tap a day in the week strip or anywhere in the plan
 table and it opens on the Log tab ready to enter miles.
+
+**A journal on every day.** Under the day you're logging there's a note field
+that asks the right question for that day — *How did the run feel?*, *Rest day —
+how did recovery go?*, *How did the race go?* — with a placeholder to get you
+started. It saves as you type.
+
+Earlier entries collect below, newest first, each showing the date, the workout,
+the miles and what you wrote. Days you logged miles on but haven't written about
+still appear, so the journal doubles as the full record of everything you've run
+— tap one to add a note. Notes and miles are stored independently: clearing a
+day's miles never deletes what you wrote about it.
 
 **A little runner on every bar.** A plain stick figure — it stands at your current
 progress and runs as you log miles. Hit a goal and it flings its arms out, turns

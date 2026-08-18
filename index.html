@@ -298,6 +298,74 @@ body {
 
 .daynav { display: flex; gap: 4px; align-items: center; justify-content: center; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
 
+/* ---- journal ----------------------------------------------------- */
+
+.jr-prompt {
+  font-family: var(--f-round);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.jr-prompt span { display: block; font-size: 12px; font-weight: 400; color: var(--ink-3); margin-bottom: 6px; }
+.jr-note {
+  width: 100%;
+  min-height: 96px;
+  font-family: var(--f-round);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--ground);
+  border: 1.5px solid var(--line-2);
+  border-radius: 16px;
+  padding: 13px 15px;
+  resize: vertical;
+  margin-top: 10px;
+}
+.jr-note::placeholder { color: var(--ink-3); }
+.jr-note:focus { outline: none; border-color: var(--pop); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pop) 18%, transparent); }
+.jr-state {
+  font-family: var(--f-round);
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: var(--ink-3);
+  margin: 8px 0 0;
+  min-height: 15px;
+}
+.jr-state.saved { color: var(--mint); }
+
+.jr-item {
+  appearance: none;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 13px 8px;
+  cursor: pointer;
+  font-family: var(--f-round);
+  transition: background .14s;
+}
+.jr-item:last-child { border-bottom: 0; }
+.jr-item:hover { background: var(--sunken); }
+.jr-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.jr-when { font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+.jr-item.today .jr-when { color: var(--accent); }
+.jr-what { font-size: 12px; color: var(--ink-3); }
+.jr-mi { margin-left: auto; font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-3); }
+.jr-item.met .jr-mi { color: var(--mint); }
+.jr-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 7px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.jr-none { font-size: 12.5px; color: var(--ink-3); margin: 6px 0 0; font-style: italic; }
+
 /* ---- lists ------------------------------------------------------- */
 
 .row {
@@ -1070,8 +1138,15 @@ textarea.sync {
       </section>
 
       <section class="card">
-        <p class="eyebrow">Everything you've run</p>
-        <div id="history"></div>
+        <p class="eyebrow">Journal</p>
+        <p class="jr-prompt" id="jr-prompt"></p>
+        <textarea class="jr-note" id="jr-note" rows="3" maxlength="2000"></textarea>
+        <p class="jr-state" id="jr-state">Saves as you type.</p>
+      </section>
+
+      <section class="card">
+        <p class="eyebrow">Earlier entries</p>
+        <div id="journal"></div>
       </section>
 
     </section>
@@ -1577,7 +1652,7 @@ textarea.sync {
     renderWeekMeter(opts);
     renderAllMeter(opts);
 
-    if (view === "log")  { renderDay(); renderHistory(); }
+    if (view === "log")  { renderDay(); renderJournal(); }
     if (view === "week") { renderStrip(); renderPicked(); renderSwap(); renderWeekList(); }
     if (view === "plan") { renderVersus(); renderTable(); renderSetup(); }
   }
@@ -1697,24 +1772,61 @@ textarea.sync {
       : "<b>" + fmt(TOTAL - done) + " mi</b> to go across the whole plan";
   }
 
-  /* --- the log's history --------------------------------------------- */
+  /* --- the journal ---------------------------------------------------- */
 
-  function renderHistory() {
+  function askFor(e) {
+    if (e.t === "race") return "How did the race go?";
+    if (e.t === "rest") return "Rest day — how did recovery go?";
+    return "How did the run feel?";
+  }
+  function hintFor(e) {
+    if (e.t === "race") return "Conditions, how you paced it, how it felt crossing the line…";
+    if (e.t === "rest") return "Stretching, foam rolling, a walk, an early night…";
+    return "Legs, breathing, pace, weather, what you'd do differently…";
+  }
+
+  /* Notes live on the same day slot as the miles, so clearing one never takes
+     the other with it. */
+  function noteFor(r, w, d) {
+    var it = r.log[w + ":" + d];
+    return (it && it.note) || "";
+  }
+  function prune(r, k) {
+    var it = r.log[k];
+    if (it && !it.mi && !it.done && !it.note) delete r.log[k];
+  }
+
+  function renderJournal() {
     var r = me();
-    var box = document.getElementById("history");
-    box.innerHTML = "";
-    var rows = [];
+    var e = entryAt(r, viewWeek, selDay);
+    var when = dateOf(viewWeek, selDay);
+    var k = viewWeek + ":" + selDay;
 
+    document.getElementById("jr-prompt").innerHTML =
+      "<span>" + (isToday(viewWeek, selDay) ? "Today · " : "") +
+      LONG[selDay] + ", " + MONTH[when.getMonth()] + " " + when.getDate() +
+      " · " + labelOf(e) + "</span>" + askFor(e);
+
+    var ta = document.getElementById("jr-note");
+    ta.placeholder = hintFor(e);
+    if (document.activeElement !== ta) ta.value = noteFor(r, viewWeek, selDay);
+
+    /* Everything with a note or miles on it, newest first — the written record
+       and the mileage record in one place. */
+    var rows = [];
     PLAN.forEach(function (week, w) {
       week.forEach(function (_x, d) {
-        var mi = milesFor(r, w, d);
-        if (!mi && !doneFor(r, w, d)) return;
-        rows.push({ w: w, d: d, mi: mi, e: entryAt(r, w, d), when: dateOf(w, d) });
+        var note = noteFor(r, w, d), mi = milesFor(r, w, d);
+        var done = doneFor(r, w, d);
+        if (!note && !mi && !done) return;
+        rows.push({ w: w, d: d, mi: mi, done: done, note: note, e: entryAt(r, w, d), when: dateOf(w, d) });
       });
     });
 
+    var box = document.getElementById("journal");
+    box.innerHTML = "";
     if (!rows.length) {
-      box.innerHTML = '<p class="empty">Nothing logged yet. Your runs will collect here.</p>';
+      box.innerHTML = '<p class="empty">Nothing written down yet. Notes you make on a day will collect here.</p>';
       return;
     }
 
@@ -1723,14 +1835,21 @@ textarea.sync {
       var met = goal > 0 ? row.mi >= goal : true;
       var b = document.createElement("button");
       b.type = "button";
-      b.className = "row" + (met ? " met" : "") + (goal === 0 ? " rest" : "") +
-                    (isToday(row.w, row.d) ? " today" : "");
+      b.className = "jr-item" + (met ? " met" : "") + (isToday(row.w, row.d) ? " today" : "");
       b.innerHTML =
-        '<span class="row-when">' + (isToday(row.w, row.d) ? "Today" :
-          DAYS[row.d] + " " + MONTH[row.when.getMonth()] + " " + row.when.getDate()) + "</span>" +
-        '<span class="row-what">' + labelOf(row.e) + "</span>" +
-        '<span class="row-mi">' + (row.mi ? fmt(row.mi) + " mi" : "✓") + "</span>";
-      b.onclick = function () { viewWeek = row.w; selDay = row.d; render(); };
+        '<span class="jr-head">' +
+          '<span class="jr-when">' + (isToday(row.w, row.d) ? "Today" :
+            DAYS[row.d] + " " + MONTH[row.when.getMonth()] + " " + row.when.getDate()) + "</span>" +
+          '<span class="jr-what">' + labelOf(row.e) + "</span>" +
+          '<span class="jr-mi">' + (row.mi ? fmt(row.mi) + " mi" : row.done ? "✓" : "") + "</span>" +
+        "</span>" +
+        (row.note ? '<p class="jr-text">' + esc(row.note) + "</p>"
+                  : '<p class="jr-none">No note yet — tap to add one.</p>');
+      b.onclick = function () {
+        viewWeek = row.w; selDay = row.d;
+        render();
+        document.getElementById("jr-note").focus();
+      };
       box.appendChild(b);
     });
   }
@@ -1789,6 +1908,32 @@ textarea.sync {
     document.getElementById("in-n1").value = S.runners[0].name;
     document.getElementById("in-n2").value = S.runners[1].name;
   }
+
+  /* Notes save as you type, but the list only repaints on blur — repainting
+     mid-keystroke would steal focus. */
+  var savedTimer = null;
+  var jrNote = document.getElementById("jr-note");
+
+  jrNote.oninput = function () {
+    var r = me(), k = viewWeek + ":" + selDay, v = jrNote.value;
+    if (v.trim()) {
+      r.log[k] = r.log[k] || {};
+      r.log[k].note = v;
+    } else if (r.log[k]) {
+      delete r.log[k].note;
+      prune(r, k);
+    }
+    save();
+    var st = document.getElementById("jr-state");
+    st.textContent = "Saved";
+    st.classList.add("saved");
+    clearTimeout(savedTimer);
+    savedTimer = setTimeout(function () {
+      st.textContent = "Saves as you type.";
+      st.classList.remove("saved");
+    }, 1600);
+  };
+  jrNote.onblur = function () { render(); };
 
   /* --- navigation ------------------------------------------------------ */
 
@@ -1889,8 +2034,9 @@ textarea.sync {
       var clr = document.createElement("button");
       clr.className = "btn btn-quiet spacer";
       clr.textContent = "Clear";
-      clr.onclick = function () {
-        delete me().log[viewWeek + ":" + selDay];
+      clr.onclick = function () {                 /* clears the miles, keeps the note */
+        var rr = me(), key = viewWeek + ":" + selDay;
+        if (rr.log[key]) { delete rr.log[key].mi; delete rr.log[key].done; prune(rr, key); }
         save();
         render();
       };
@@ -1952,7 +2098,7 @@ textarea.sync {
     var before = goalState(r);
     var k = viewWeek + ":" + selDay;
     if (miles === 0) {
-      if (r.log[k]) { r.log[k].mi = 0; if (!r.log[k].done) delete r.log[k]; }
+      if (r.log[k]) { delete r.log[k].mi; prune(r, k); }
     } else {
       r.log[k] = r.log[k] || {};
       r.log[k].mi = miles;
@@ -1966,7 +2112,7 @@ textarea.sync {
     var before = goalState(r);
     var k = viewWeek + ":" + selDay;
     if (!flag) {
-      if (r.log[k]) { r.log[k].done = false; if (!r.log[k].mi) delete r.log[k]; }
+      if (r.log[k]) { r.log[k].done = false; prune(r, k); }
       save();
       render();
       return;
