@@ -127,8 +127,211 @@ body {
 .wrap {
   max-width: 900px;
   margin: 0 auto;
-  padding: 0 var(--pad) 96px;
+  padding: 20px var(--pad) 110px;
 }
+
+/* ---- home · pick your runner ------------------------------------- */
+
+.home {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px var(--pad);
+}
+.home.off, .shell.off { display: none; }
+
+.home-card { width: 100%; max-width: 620px; text-align: center; }
+.home .wordmark { font-size: clamp(46px, 13vw, 68px); }
+.home .plan-name { margin-top: 8px; }
+.home-count {
+  font-family: var(--f-round);
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 18px 0 0;
+}
+.home-count b { color: var(--accent); font-variant-numeric: tabular-nums; }
+.home-ask {
+  font-family: var(--f-round);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 40px 0 16px;
+}
+
+.picker { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pick {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 24px 16px 20px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  min-width: 0;
+  transition: transform .16s cubic-bezier(.3,1.3,.5,1), border-color .16s, box-shadow .16s;
+}
+.pick:hover, .pick:focus-visible {
+  transform: translateY(-4px);
+  border-color: var(--pop);
+  box-shadow: 0 2px 4px rgba(180,90,120,.09), 0 20px 36px -16px rgba(180,90,120,.42);
+}
+.pick:active { transform: translateY(-1px); }
+.pick-fig { height: 96px; display: flex; align-items: flex-end; justify-content: center; }
+.pick-name {
+  font-family: var(--f-round);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 10px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pick-stat {
+  font-family: var(--f-round);
+  font-size: 12.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.pick-stat b { color: var(--accent); }
+.pick-bar { width: 100%; height: 6px; background: var(--sunken); border-radius: 99px; margin-top: 12px; overflow: hidden; }
+.pick-bar i { display: block; height: 100%; border-radius: 99px; background: var(--pop); }
+.home-foot { font-size: 12.5px; color: var(--ink-3); margin: 26px 0 0; }
+
+/* ---- app shell --------------------------------------------------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px var(--pad);
+  background: color-mix(in srgb, var(--ground) 86%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.who {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  border-radius: 99px;
+  padding: 5px 14px 5px 6px;
+  cursor: pointer;
+  min-width: 0;
+  transition: border-color .14s, background .14s;
+}
+.who:hover { border-color: var(--pop); }
+.who-av {
+  width: 30px; height: 30px;
+  border-radius: 99px;
+  background: var(--sunken);
+  display: flex; align-items: flex-end; justify-content: center;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.who-av .runner { margin-bottom: -3px; }
+.who-name {
+  font-family: var(--f-round);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.who-swap {
+  font-family: var(--f-round);
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  flex: 0 0 auto;
+}
+.topbar .countdown { margin-left: auto; font-size: 11.5px; }
+
+.view { display: none; }
+.view.on { display: block; animation: viewIn .22s ease-out; }
+@keyframes viewIn { from { opacity: 0; transform: translateY(6px); } }
+
+.tabs {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid var(--line);
+  border-radius: 99px;
+  box-shadow: var(--shadow);
+  width: min(360px, calc(100vw - 32px));
+}
+.tabs button {
+  appearance: none;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--f-round);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 6px;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: background .16s, color .16s;
+}
+.tabs button[aria-current="true"] { background: var(--pop); color: var(--pop-in); }
+.tabs button:not([aria-current="true"]):hover { background: var(--sunken); color: var(--ink); }
+
+.daynav { display: flex; gap: 4px; align-items: center; justify-content: center; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
+
+/* ---- lists ------------------------------------------------------- */
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--f-round);
+}
+.row:last-child { border-bottom: 0; }
+.row-when { font-size: 12.5px; color: var(--ink-3); width: 92px; flex: 0 0 auto; }
+.row-what { font-size: 13.5px; color: var(--ink); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row-mi { font-size: 13.5px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-2); flex: 0 0 auto; }
+.row.met .row-mi { color: var(--mint); }
+.row.rest .row-what { color: var(--ink-3); }
+.row.today .row-when { color: var(--accent); font-weight: 700; }
+button.row { appearance: none; width: 100%; background: transparent; border-left: 0; border-right: 0; border-top: 0; text-align: left; cursor: pointer; border-radius: 8px; }
+button.row:hover { background: var(--sunken); }
+.empty { font-size: 13px; color: var(--ink-3); padding: 6px 2px 2px; }
+
+.picked {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+  font-family: var(--f-round);
+}
+.picked-day { font-size: 15px; font-weight: 700; color: var(--ink); }
+.picked-sub { font-size: 12.5px; color: var(--ink-3); }
+.picked .btn { margin-left: auto; }
 
 /* ---- masthead ---------------------------------------------------- */
 
@@ -387,6 +590,11 @@ body {
 @keyframes cheerB { 0%,100% { transform: rotate(-131deg); } 50% { transform: rotate(-107deg); } }
 @keyframes kickA  { 0%,100% { transform: rotate(24deg); } 50% { transform: rotate(-6deg); } }
 @keyframes kickB  { 0%,100% { transform: rotate(-24deg); } 50% { transform: rotate(6deg); } }
+
+/* Away from the bars there's no pink fill to contrast against, so the runner
+   is drawn as a plain solid silhouette instead of dark-with-a-halo. */
+.runner.solid .torso, .runner.solid .head, .runner.solid .lim, .runner.solid .prop > * { fill: var(--ink); }
+.runner.solid .body-g { filter: none; }
 
 /* ---- confetti ---------------------------------------------------- */
 
@@ -787,7 +995,9 @@ textarea.sync {
 
 @media (max-width: 560px) {
   .wordmark { font-size: 25px; }
-  .countdown { margin-left: 0; width: 100%; }
+  .home .wordmark { font-size: clamp(46px, 13vw, 68px); }
+  .topbar .countdown { font-size: 10.5px; }
+  .who-swap { display: none; }
   .versus { grid-template-columns: 1fr; }
   .field label { flex-basis: 100%; }
   .stepper input { width: 74px; }
@@ -798,134 +1008,185 @@ textarea.sync {
 }
 </style>
 
-<div class="wrap">
+<!-- ============ HOME · who's logging in ============ -->
+<section class="home" id="home">
+  <div class="home-card">
+    <h1 class="wordmark">13<span>.</span>1</h1>
+    <p class="plan-name">Hal Higdon · Novice 1 · 12 weeks</p>
+    <p class="home-count" id="home-count"></p>
 
-  <header class="masthead">
-    <div>
-      <h1 class="wordmark">13<span>.</span>1</h1>
-      <p class="plan-name">Hal Higdon · Novice 1 · 12 weeks</p>
-    </div>
-    <div class="countdown" id="countdown"></div>
+    <p class="home-ask">Who's running today?</p>
+    <div class="picker" id="picker"></div>
+
+    <p class="home-foot" id="home-foot"></p>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<div class="shell" id="shell">
+
+  <header class="topbar">
+    <button class="who" id="who" type="button" title="Switch runner">
+      <span class="who-av" id="who-av"></span>
+      <span class="who-name" id="who-name"></span>
+      <span class="who-swap">switch</span>
+    </button>
+    <span class="countdown" id="countdown"></span>
   </header>
 
-  <div class="switch" id="switch" role="group" aria-label="Choose runner"></div>
+  <main class="wrap">
 
-  <!-- the three bars -->
-  <section class="card">
-    <div class="meters">
+    <!-- ---------- THE LOG ---------- -->
+    <section class="view" id="view-log">
 
-      <div class="meter meter-daily" id="m-day">
-        <div class="meter-head">
-          <span class="meter-label">Today</span>
-          <span class="meter-val" id="v-day"></span>
+      <section class="card">
+        <div class="meter meter-daily" id="m-day">
+          <div class="meter-head">
+            <span class="meter-label">Today</span>
+            <span class="meter-val" id="v-day"></span>
+          </div>
+          <div class="track">
+            <div class="fill" id="f-day"></div>
+            <div class="runner-slot" id="r-day"></div>
+          </div>
+          <p class="meter-note" id="n-day"></p>
         </div>
-        <div class="track">
-          <div class="fill" id="f-day"></div>
-          <div class="runner-slot" id="r-day"></div>
+      </section>
+
+      <section class="card">
+        <div class="day-head">
+          <div>
+            <p class="day-when" id="d-when"></p>
+            <h2 class="day-title" id="d-title"></h2>
+          </div>
+          <span class="tag" id="d-tag"></span>
         </div>
-        <p class="meter-note" id="n-day"></p>
-      </div>
-
-      <div class="meter" id="m-week">
-        <div class="meter-head">
-          <span class="meter-label" id="l-week">This week</span>
-          <span class="meter-val" id="v-week"></span>
+        <div class="logger" id="logger"></div>
+        <div class="daynav">
+          <button class="btn btn-quiet" id="day-prev" aria-label="Previous day">←</button>
+          <button class="btn btn-quiet" id="day-today">Jump to today</button>
+          <button class="btn btn-quiet" id="day-next" aria-label="Next day">→</button>
         </div>
-        <div class="track">
-          <div class="fill" id="f-week"></div>
-          <div class="runner-slot" id="r-week"></div>
+      </section>
+
+      <section class="card">
+        <p class="eyebrow">Everything you've run</p>
+        <div id="history"></div>
+      </section>
+
+    </section>
+
+    <!-- ---------- THIS WEEK ---------- -->
+    <section class="view" id="view-week">
+
+      <section class="card">
+        <div class="meter" id="m-week">
+          <div class="meter-head">
+            <span class="meter-label" id="l-week">This week</span>
+            <span class="meter-val" id="v-week"></span>
+          </div>
+          <div class="track">
+            <div class="fill" id="f-week"></div>
+            <div class="runner-slot" id="r-week"></div>
+          </div>
+          <p class="meter-note" id="n-week"></p>
         </div>
-        <p class="meter-note" id="n-week"></p>
-      </div>
+      </section>
 
-      <div class="meter" id="m-all">
-        <div class="meter-head">
-          <span class="meter-label">All 12 weeks</span>
-          <span class="meter-val" id="v-all"></span>
+      <section class="card">
+        <div class="strip-head">
+          <p class="eyebrow" id="strip-label"></p>
+          <div class="wk-nav">
+            <button class="btn btn-quiet" id="wk-prev" aria-label="Previous week">←</button>
+            <button class="btn btn-quiet" id="wk-today">This week</button>
+            <button class="btn btn-quiet" id="wk-next" aria-label="Next week">→</button>
+          </div>
         </div>
-        <div class="track">
-          <div class="fill" id="f-all"></div>
-          <div class="runner-slot" id="r-all"></div>
+        <div class="strip" id="strip"></div>
+
+        <div class="picked" id="picked"></div>
+        <div class="swap" id="swap"></div>
+      </section>
+
+      <section class="card">
+        <p class="eyebrow">Day by day</p>
+        <div id="weeklist"></div>
+      </section>
+
+    </section>
+
+    <!-- ---------- THE PLAN ---------- -->
+    <section class="view" id="view-plan">
+
+      <section class="card">
+        <div class="meter" id="m-all">
+          <div class="meter-head">
+            <span class="meter-label">All 12 weeks</span>
+            <span class="meter-val" id="v-all"></span>
+          </div>
+          <div class="track">
+            <div class="fill" id="f-all"></div>
+            <div class="runner-slot" id="r-all"></div>
+          </div>
+          <p class="meter-note" id="n-all"></p>
         </div>
-        <p class="meter-note" id="n-all"></p>
-      </div>
+      </section>
 
-    </div>
-  </section>
+      <section class="card">
+        <p class="eyebrow">Both of you</p>
+        <div class="versus" id="versus"></div>
+      </section>
 
-  <!-- selected day -->
-  <section class="card">
-    <div class="day-head">
-      <div>
-        <p class="day-when" id="d-when"></p>
-        <h2 class="day-title" id="d-title"></h2>
-      </div>
-      <span class="tag" id="d-tag"></span>
-    </div>
-    <div class="logger" id="logger"></div>
-    <div class="swap" id="swap"></div>
-  </section>
+      <section class="card">
+        <p class="eyebrow">The whole plan · tap any day to log it</p>
+        <div class="plan-scroll">
+          <table class="plan" id="plan-table"></table>
+        </div>
 
-  <!-- week strip -->
-  <section class="card">
-    <div class="strip-head">
-      <p class="eyebrow" id="strip-label"></p>
-      <div class="wk-nav">
-        <button class="btn btn-quiet" id="wk-prev" aria-label="Previous week">←</button>
-        <button class="btn btn-quiet" id="wk-today">Today</button>
-        <button class="btn btn-quiet" id="wk-next" aria-label="Next week">→</button>
-      </div>
-    </div>
-    <div class="strip" id="strip"></div>
-  </section>
+        <details class="setup">
+          <summary>Setup &amp; sync</summary>
 
-  <!-- both runners -->
-  <section class="card">
-    <p class="eyebrow">Both of you</p>
-    <div class="versus" id="versus"></div>
-  </section>
+          <div class="field">
+            <label for="in-race">Race day</label>
+            <input type="date" id="in-race">
+          </div>
+          <p class="hint" id="start-note"></p>
+          <div class="field">
+            <label for="in-n1">Runner 1</label>
+            <input type="text" id="in-n1" maxlength="24" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="in-n2">Runner 2</label>
+            <input type="text" id="in-n2" maxlength="24" autocomplete="off">
+          </div>
 
-  <!-- full plan -->
-  <section class="card">
-    <p class="eyebrow">The whole plan · tap any day to log it</p>
-    <div class="plan-scroll">
-      <table class="plan" id="plan-table"></table>
-    </div>
+          <p class="hint">
+            Everything saves to this browser only — nothing is uploaded anywhere. To get both of you onto
+            one phone's history, copy the code below and paste it into the other phone, then press Load.
+          </p>
+          <textarea class="sync" id="sync-box" spellcheck="false" aria-label="Sync code"></textarea>
+          <div class="logger" style="border-top:0; padding-top:10px; margin-top:0;">
+            <button class="btn" id="b-copy">Copy code</button>
+            <button class="btn" id="b-load">Load pasted code</button>
+            <button class="btn btn-quiet spacer" id="b-reset">Erase everything</button>
+          </div>
+        </details>
+      </section>
 
-    <details class="setup">
-      <summary>Setup &amp; sync</summary>
-
-      <div class="field">
-        <label for="in-race">Race day</label>
-        <input type="date" id="in-race">
-      </div>
-      <p class="hint" id="start-note"></p>
-      <div class="field">
-        <label for="in-n1">Runner 1</label>
-        <input type="text" id="in-n1" maxlength="24" autocomplete="off">
-      </div>
-      <div class="field">
-        <label for="in-n2">Runner 2</label>
-        <input type="text" id="in-n2" maxlength="24" autocomplete="off">
-      </div>
-
-      <p class="hint">
-        Everything saves to this browser only — nothing is uploaded anywhere. To get both of you onto
-        one phone's history, copy the code below and paste it into the other phone, then press Load.
+      <p class="colophon">
+        Schedule from Hal Higdon's Novice 1 half marathon program.<br>
+        <span id="total-note"></span>
       </p>
-      <textarea class="sync" id="sync-box" spellcheck="false" aria-label="Sync code"></textarea>
-      <div class="logger" style="border-top:0; padding-top:10px; margin-top:0;">
-        <button class="btn" id="b-copy">Copy code</button>
-        <button class="btn" id="b-load">Load pasted code</button>
-        <button class="btn btn-quiet spacer" id="b-reset">Erase everything</button>
-      </div>
-    </details>
-  </section>
 
-  <p class="colophon">
-    Schedule from Hal Higdon's Novice 1 half marathon program.<br>
-    <span id="total-note"></span>
-  </p>
+    </section>
+
+  </main>
+
+  <nav class="tabs" id="tabs">
+    <button type="button" data-view="log">Log</button>
+    <button type="button" data-view="week">Week</button>
+    <button type="button" data-view="plan">Plan</button>
+  </nav>
 
 </div>
 
@@ -1033,7 +1294,7 @@ textarea.sync {
   function freshState() {
     return {
       race: DEFAULT_RACE,
-      active: 0,
+      active: null,          /* nobody signed in yet */
       runners: [blankRunner("Kylie"), blankRunner("Caleb")]
     };
   }
@@ -1041,6 +1302,7 @@ textarea.sync {
   var S = load();
   var viewWeek = 0;      // week index currently shown in the strip
   var selDay   = 0;      // day index within viewWeek
+  var view     = "home"; // home | log | week | plan
 
   function load() {
     try {
@@ -1053,7 +1315,7 @@ textarea.sync {
         if (!r.order) r.order = {};
       });
       if (!s.race) s.race = DEFAULT_RACE;
-      s.active = s.active === 1 ? 1 : 0;
+      s.active = s.active === 0 || s.active === 1 ? s.active : null;
       return s;
     } catch (e) {
       return freshState();
@@ -1063,7 +1325,8 @@ textarea.sync {
     try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
   }
 
-  function me() { return S.runners[S.active]; }
+  function me() { return S.runners[S.active === 1 ? 1 : 0]; }
+  function signedIn() { return S.active === 0 || S.active === 1; }
   function entryFor(r, w, d) { return r.log[w + ":" + d] || null; }
   function milesFor(r, w, d) { var e = entryFor(r, w, d); return e && e.mi ? e.mi : 0; }
   function doneFor(r, w, d)  { var e = entryFor(r, w, d); return !!(e && e.done); }
@@ -1172,7 +1435,7 @@ textarea.sync {
 
   var shownStyle = null;
   function ensureRunners() {
-    var style = S.active === 0 ? "pony" : "cap";
+    var style = S.active === 1 ? "cap" : "pony";
     if (style === shownStyle) return;
     shownStyle = style;
     document.getElementById("r-day").innerHTML  = runnerSVG(1.5, style);
@@ -1288,89 +1551,251 @@ textarea.sync {
     return (Math.round(n * 10) / 10).toFixed(1).replace(/\.0$/, "");
   }
 
+  /* One render entry point. It routes to the visible screen and only paints
+     what that screen shows — the meters all stay in the DOM so a celebration
+     can still find its bar. */
   function render(opts) {
     opts = opts || {};
-    var r = me();
-    var p = position();
+
+    var onHome = !signedIn() || view === "home";
+    document.getElementById("home").classList.toggle("off", !onHome);
+    document.getElementById("shell").classList.toggle("off", onHome);
+
+    if (onHome) { renderHome(); return; }
+
     ensureRunners();
+    renderTop();
 
-    /* --- countdown ------------------------------------------------- */
-    var race = dateOf(11, raceDow());
-    var today = new Date(); today.setHours(0, 0, 0, 0);
-    var togo = Math.round((race - today) / 86400000);
-    var cd = document.getElementById("countdown");
-    if (togo > 0) {
-      cd.innerHTML = "<b>" + togo + "</b> day" + (togo === 1 ? "" : "s") + " to race day · " +
-                     MONTH[race.getMonth()] + " " + race.getDate();
-    } else if (togo === 0) {
-      cd.innerHTML = "<b>Race day.</b> Go get it.";
-    } else {
-      cd.innerHTML = "Race day was " + MONTH[race.getMonth()] + " " + race.getDate();
-    }
-
-    /* --- runner switch --------------------------------------------- */
-    var sw = document.getElementById("switch");
-    sw.innerHTML = "";
-    S.runners.forEach(function (rr, i) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.setAttribute("aria-pressed", i === S.active ? "true" : "false");
-      b.innerHTML = esc(rr.name) + '<span class="mi">' + fmt(totalMiles(rr)) + " mi</span>";
-      b.onclick = function () { S.active = i; save(); render(); };
-      sw.appendChild(b);
+    ["log", "week", "plan"].forEach(function (v) {
+      document.getElementById("view-" + v).classList.toggle("on", v === view);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("#tabs button"), function (b) {
+      b.setAttribute("aria-current", b.getAttribute("data-view") === view ? "true" : "false");
     });
 
-    /* --- the three bars -------------------------------------------- */
-    var todayW = p.before ? 0 : p.w;
-    var todayD = p.before ? 0 : p.d;
-    if (todayD >= PLAN[todayW].length) todayD = PLAN[todayW].length - 1;  /* days after a mid-week race */
-    var tEntry = entryAt(r, todayW, todayD);
-    var tGoal  = goalOf(tEntry);
-    var tDone  = milesFor(r, todayW, todayD);
-    var tRatio = tGoal > 0 ? tDone / tGoal : (doneFor(r, todayW, todayD) || tDone > 0 ? 1 : 0);
+    renderDayMeter(opts);
+    renderWeekMeter(opts);
+    renderAllMeter(opts);
 
-    bar("day", tRatio, tGoal > 0 ? fmt(tDone) + '<span class="of"> / ' + fmt(tGoal) + " mi</span>"
-                                 : (tRatio >= 1 ? "Done" : labelOf(tEntry)));
-    var dayState = tGoal === 0 ? (tRatio >= 1 ? "done" : "rest")
-                 : tRatio >= 1 ? "done" : tRatio > 0 ? "run" : "idle";
-    setRunner("r-day", dayState, opts.cheer === "day");
+    if (view === "log")  { renderDay(); renderHistory(); }
+    if (view === "week") { renderStrip(); renderPicked(); renderSwap(); renderWeekList(); }
+    if (view === "plan") { renderVersus(); renderTable(); renderSetup(); }
+  }
+
+  function raceDate() { return dateOf(11, raceDow()); }
+  function daysToRace() {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    return Math.round((raceDate() - today) / 86400000);
+  }
+  function countdownHTML() {
+    var race = raceDate(), togo = daysToRace();
+    if (togo > 0) return "<b>" + togo + "</b> day" + (togo === 1 ? "" : "s") + " to race day · " +
+                         MONTH[race.getMonth()] + " " + race.getDate();
+    if (togo === 0) return "<b>Race day.</b> Go get it.";
+    return "Race day was " + MONTH[race.getMonth()] + " " + race.getDate();
+  }
+
+  /* --- home ---------------------------------------------------------- */
+
+  function renderHome() {
+    document.getElementById("home-count").innerHTML = countdownHTML();
+
+    var p = position();
+    var wk = p.before ? 1 : Math.min(12, p.w + 1);
+    document.getElementById("home-foot").textContent = p.before
+      ? "Training starts Monday " + MONTH[startDate().getMonth()] + " " + startDate().getDate() + "."
+      : p.after ? "The plan is done." : "Week " + wk + " of 12.";
+
+    var box = document.getElementById("picker");
+    box.innerHTML = "";
+    S.runners.forEach(function (rr, i) {
+      var tot = totalMiles(rr);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "pick";
+      b.innerHTML =
+        '<span class="pick-fig">' + runnerSVG(1.85, i === 1 ? "cap" : "pony") + "</span>" +
+        '<span class="pick-name">' + esc(rr.name) + "</span>" +
+        '<span class="pick-stat"><b>' + fmt(tot) + "</b> of " + fmt(TOTAL) + " mi</span>" +
+        '<span class="pick-bar"><i style="width:' + Math.min(100, tot / TOTAL * 100) + '%"></i></span>';
+      b.onclick = function () {
+        S.active = i;
+        save();
+        go("log");
+      };
+      box.appendChild(b);
+      var fig = b.querySelector(".runner");
+      if (fig) {
+        fig.classList.add("solid");
+        fig.setAttribute("data-state", tot > 0 ? "run" : "idle");
+      }
+    });
+  }
+
+  /* --- top bar ------------------------------------------------------- */
+
+  function renderTop() {
+    document.getElementById("countdown").innerHTML = countdownHTML();
+    document.getElementById("who-name").textContent = me().name;
+    var av = document.getElementById("who-av");
+    if (av.getAttribute("data-for") !== String(S.active)) {
+      av.setAttribute("data-for", String(S.active));
+      av.innerHTML = runnerSVG(0.62, S.active === 1 ? "cap" : "pony");
+      var fig = av.querySelector(".runner");
+      fig.classList.add("solid");
+      fig.setAttribute("data-state", "run");
+    }
+  }
+
+  /* --- the three meters ---------------------------------------------- */
+
+  function todaySlot() {
+    var p = position();
+    var w = p.before ? 0 : p.w;
+    var d = p.before ? 0 : p.d;
+    if (d >= PLAN[w].length) d = PLAN[w].length - 1;   /* days after a mid-week race */
+    return { w: w, d: d, p: p };
+  }
+
+  function renderDayMeter(opts) {
+    var r = me(), t = todaySlot();
+    var e = entryAt(r, t.w, t.d);
+    var goal = goalOf(e), done = milesFor(r, t.w, t.d);
+    var ratio = goal > 0 ? done / goal : (doneFor(r, t.w, t.d) || done > 0 ? 1 : 0);
+
+    bar("day", ratio, goal > 0 ? fmt(done) + '<span class="of"> / ' + fmt(goal) + " mi</span>"
+                               : (ratio >= 1 ? "Done" : labelOf(e)));
+    setRunner("r-day", goal === 0 ? (ratio >= 1 ? "done" : "rest")
+                     : ratio >= 1 ? "done" : ratio > 0 ? "run" : "idle", opts.cheer === "day");
     document.getElementById("n-day").innerHTML =
-      p.before ? "Plan starts " + MONTH[startDate().getMonth()] + " " + startDate().getDate() + "."
-      : p.after ? "Plan finished. Every mile logged still counts below."
-      : "<b>" + LONG[todayD] + "</b> · Week " + (todayW + 1) + " · " + labelOf(tEntry);
+      t.p.before ? "Plan starts " + MONTH[startDate().getMonth()] + " " + startDate().getDate() + "."
+      : t.p.after ? "Plan finished. Every mile logged still counts."
+      : "<b>" + LONG[t.d] + "</b> · Week " + (t.w + 1) + " · " + labelOf(e);
+  }
 
-    var wGoal = weekGoal(todayW);
-    var wDone = weekMiles(r, todayW);
-    bar("week", wGoal > 0 ? wDone / wGoal : 0,
-        fmt(wDone) + '<span class="of"> / ' + fmt(wGoal) + " mi</span>");
-    document.getElementById("l-week").textContent = "Week " + (todayW + 1) + " of 12";
-    setRunner("r-week", wDone >= wGoal ? "done" : wDone > 0 ? "run" : "idle", opts.cheer === "week");
-    var wLeft = wGoal - wDone;
-    document.getElementById("n-week").innerHTML = wLeft > 0.05
-      ? "<b>" + fmt(wLeft) + " mi</b> left this week"
+  function renderWeekMeter(opts) {
+    var r = me();
+    var w = view === "week" ? viewWeek : todaySlot().w;
+    var goal = weekGoal(w), done = weekMiles(r, w);
+    bar("week", goal > 0 ? done / goal : 0,
+        fmt(done) + '<span class="of"> / ' + fmt(goal) + " mi</span>");
+    document.getElementById("l-week").textContent =
+      "Week " + (w + 1) + " of 12" + (w === todaySlot().w ? " · this week" : "");
+    setRunner("r-week", done >= goal ? "done" : done > 0 ? "run" : "idle", opts.cheer === "week");
+    var left = goal - done;
+    document.getElementById("n-week").innerHTML = left > 0.05
+      ? "<b>" + fmt(left) + " mi</b> still to run this week"
       : "Week complete.";
+  }
 
-    var aDone = totalMiles(r);
-    bar("all", aDone / TOTAL, fmt(aDone) + '<span class="of"> / ' + fmt(TOTAL) + " mi</span>");
-    setRunner("r-all", aDone >= TOTAL ? "done" : aDone > 0 ? "run" : "idle", opts.cheer === "all");
-    document.getElementById("n-all").innerHTML = aDone >= TOTAL
+  function renderAllMeter(opts) {
+    var done = totalMiles(me());
+    bar("all", done / TOTAL, fmt(done) + '<span class="of"> / ' + fmt(TOTAL) + " mi</span>");
+    setRunner("r-all", done >= TOTAL ? "done" : done > 0 ? "run" : "idle", opts.cheer === "all");
+    document.getElementById("n-all").innerHTML = done >= TOTAL
       ? "Every mile in the plan. 🏅"
-      : "<b>" + fmt(TOTAL - aDone) + " mi</b> to go across the whole plan";
+      : "<b>" + fmt(TOTAL - done) + " mi</b> to go across the whole plan";
+  }
 
-    renderDay();
-    renderStrip();
-    renderVersus();
-    renderTable();
+  /* --- the log's history --------------------------------------------- */
 
+  function renderHistory() {
+    var r = me();
+    var box = document.getElementById("history");
+    box.innerHTML = "";
+    var rows = [];
+
+    PLAN.forEach(function (week, w) {
+      week.forEach(function (_x, d) {
+        var mi = milesFor(r, w, d);
+        if (!mi && !doneFor(r, w, d)) return;
+        rows.push({ w: w, d: d, mi: mi, e: entryAt(r, w, d), when: dateOf(w, d) });
+      });
+    });
+
+    if (!rows.length) {
+      box.innerHTML = '<p class="empty">Nothing logged yet. Your runs will collect here.</p>';
+      return;
+    }
+
+    rows.reverse().forEach(function (row) {
+      var goal = goalOf(row.e);
+      var met = goal > 0 ? row.mi >= goal : true;
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "row" + (met ? " met" : "") + (goal === 0 ? " rest" : "") +
+                    (isToday(row.w, row.d) ? " today" : "");
+      b.innerHTML =
+        '<span class="row-when">' + (isToday(row.w, row.d) ? "Today" :
+          DAYS[row.d] + " " + MONTH[row.when.getMonth()] + " " + row.when.getDate()) + "</span>" +
+        '<span class="row-what">' + labelOf(row.e) + "</span>" +
+        '<span class="row-mi">' + (row.mi ? fmt(row.mi) + " mi" : "✓") + "</span>";
+      b.onclick = function () { viewWeek = row.w; selDay = row.d; render(); };
+      box.appendChild(b);
+    });
+  }
+
+  /* --- the week's day-by-day ------------------------------------------ */
+
+  function renderWeekList() {
+    var r = me();
+    var box = document.getElementById("weeklist");
+    box.innerHTML = "";
+    PLAN[viewWeek].forEach(function (_x, d) {
+      var e = entryAt(r, viewWeek, d);
+      var goal = goalOf(e), mi = milesFor(r, viewWeek, d);
+      var met = goal > 0 ? mi >= goal : doneFor(r, viewWeek, d);
+      var when = dateOf(viewWeek, d);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "row" + (met ? " met" : "") + (goal === 0 ? " rest" : "") +
+                    (isToday(viewWeek, d) ? " today" : "");
+      b.innerHTML =
+        '<span class="row-when">' + LONG[d].slice(0, 3) + " " + MONTH[when.getMonth()] + " " + when.getDate() + "</span>" +
+        '<span class="row-what">' + labelOf(e) + "</span>" +
+        '<span class="row-mi">' + (goal > 0 ? fmt(mi) + " / " + fmt(goal) : met ? "✓" : "—") + "</span>";
+      b.onclick = function () { selDay = d; go("log"); };
+      box.appendChild(b);
+    });
+  }
+
+  /* --- the selected day, on the week screen ---------------------------- */
+
+  function renderPicked() {
+    var r = me();
+    var e = entryAt(r, viewWeek, selDay);
+    var when = dateOf(viewWeek, selDay);
+    var box = document.getElementById("picked");
+    box.innerHTML =
+      '<span class="picked-day">' + LONG[selDay] + "</span>" +
+      '<span class="picked-sub">' + MONTH[when.getMonth()] + " " + when.getDate() + " · " + labelOf(e) + "</span>";
+    var b = document.createElement("button");
+    b.className = "btn btn-go";
+    b.textContent = goalOf(e) > 0 ? "Log this run" : "Open";
+    b.onclick = function () { go("log"); };
+    box.appendChild(b);
+  }
+
+  /* --- setup panel ----------------------------------------------------- */
+
+  function renderSetup() {
     document.getElementById("in-race").value = S.race;
     var st = startDate();
     document.getElementById("start-note").textContent =
       "Week 1 starts Monday " + MONTH[st.getMonth()] + " " + st.getDate() + ". " +
-      "Race day is " + LONG[raceDow()] + ", so week 12 runs Monday to " + LONG[raceDow()] + ".";
+      "Race day is a " + LONG[raceDow()] + ", so week 12 runs Monday to " + LONG[raceDow()] + ".";
     document.getElementById("total-note").textContent =
       fmt(TOTAL) + " miles between Week 1 Monday and the finish line.";
     document.getElementById("in-n1").value = S.runners[0].name;
     document.getElementById("in-n2").value = S.runners[1].name;
+  }
+
+  /* --- navigation ------------------------------------------------------ */
+
+  function go(v) {
+    view = v;
+    if (v !== "home") window.scrollTo(0, 0);
+    render();
   }
 
   function bar(id, ratio, valHTML) {
@@ -1689,8 +2114,7 @@ textarea.sync {
       td.onclick = function () {
         viewWeek = +td.getAttribute("data-w");
         selDay = +td.getAttribute("data-d");
-        render();
-        document.getElementById("strip-label").scrollIntoView({ behavior: "smooth", block: "center" });
+        go("log");
       };
     });
   }
@@ -1706,12 +2130,39 @@ textarea.sync {
      ===================================================================== */
 
   function jumpToToday() {
-    var p = position();
-    viewWeek = p.before ? 0 : p.w;
-    selDay = p.before ? 0 : p.d;
-    if (selDay >= PLAN[viewWeek].length) selDay = PLAN[viewWeek].length - 1;
+    var t = todaySlot();
+    viewWeek = t.w;
+    selDay = t.d;
     render();
   }
+
+  /* Step through the plan a day at a time, rolling over week boundaries. */
+  function stepDay(dir) {
+    var d = selDay + dir, w = viewWeek;
+    if (d < 0) {
+      if (w === 0) return;
+      w--; d = PLAN[w].length - 1;
+    } else if (d >= PLAN[w].length) {
+      if (w === 11) return;
+      w++; d = 0;
+    }
+    viewWeek = w; selDay = d;
+    render();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("#tabs button"), function (b) {
+    b.onclick = function () { go(b.getAttribute("data-view")); };
+  });
+
+  document.getElementById("who").onclick = function () {
+    S.active = null;
+    save();
+    go("home");
+  };
+
+  document.getElementById("day-prev").onclick  = function () { stepDay(-1); };
+  document.getElementById("day-next").onclick  = function () { stepDay(1); };
+  document.getElementById("day-today").onclick = jumpToToday;
 
   document.getElementById("wk-prev").onclick = function () {
     if (viewWeek > 0) { viewWeek--; selDay = 0; render(); }
@@ -1719,7 +2170,11 @@ textarea.sync {
   document.getElementById("wk-next").onclick = function () {
     if (viewWeek < 11) { viewWeek++; selDay = 0; render(); }
   };
-  document.getElementById("wk-today").onclick = jumpToToday;
+  document.getElementById("wk-today").onclick = function () {
+    var t = todaySlot();
+    viewWeek = t.w; selDay = t.d;
+    render();
+  };
 
   document.getElementById("in-race").onchange = function (ev) {
     if (ev.target.value) {
@@ -1754,8 +2209,9 @@ textarea.sync {
       var next = JSON.parse(box.value);
       if (!next || !Array.isArray(next.runners) || next.runners.length !== 2) throw 0;
       S = next;
-      S.runners.forEach(function (rr) { rr.log = rr.log || {}; rr.cheered = rr.cheered || {}; });
+      S.runners.forEach(function (rr) { rr.log = rr.log || {}; rr.order = rr.order || {}; });
       if (!S.race) S.race = DEFAULT_RACE;
+      if (!signedIn()) S.active = 0;
       rebuildPlan();
       save();
       box.value = "";
@@ -1775,7 +2231,11 @@ textarea.sync {
   };
 
   rebuildPlan();
-  jumpToToday();
+  var t0 = todaySlot();
+  viewWeek = t0.w;
+  selDay = t0.d;
+  view = signedIn() ? "log" : "home";
+  render();
 })();
 </script>
 </body>

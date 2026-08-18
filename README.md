@@ -8,15 +8,26 @@ It's a single self-contained `index.html`. No build step, no server, no account.
 Open the file (or the published link) in any browser, add it to your phone's home
 screen, and it behaves like an app.
 
-## What's in it
+## Screens
 
-**Three tracker bars, always visible**
+It opens on a **home screen** asking who's running today. Pick Kylie or Caleb —
+each card shows that runner's character and how far through the plan they are —
+and the app signs you in. You stay signed in until you tap your name in the top
+bar to switch back.
 
-| Bar | Shows |
+Three tabs along the bottom:
+
+| Tab | What's on it |
 | --- | --- |
-| Today | Miles logged against today's prescribed workout |
-| This week | The week's running total against that week's plan |
-| All 12 weeks | Everything you've run against the full 199.4 |
+| **Log** | Today's mileage bar, the day you're logging, and a running history of everything you've run |
+| **Week** | This week's mileage bar, the seven-day strip, moving workouts between days, and a day-by-day breakdown |
+| **Plan** | Overall progress across all 12 weeks, both runners side by side, the full plan table, and setup |
+
+Each tab owns one of the three tracker bars — today, this week, all 12 weeks —
+so the number you're looking at always matches the screen you're on.
+
+Everything cross-links: tap a day in the week strip or anywhere in the plan
+table and it opens on the Log tab ready to enter miles.
 
 **A little runner on every bar.** A plain stick figure — it stands at your current
 progress and runs as you log miles. Hit a goal and it flings its arms out, turns
@@ -38,11 +49,11 @@ Only mileage is celebrated. Rest days get nothing — resting is on the plan, no
 an achievement. (Which is why opening the app on a rest day looks quiet: mark it
 *Rested* and it just ticks off.)
 
-**Two runners.** Switch between the two profiles at the top; each keeps its own
-log. The "Both of you" panel shows where you each stand this week and overall.
+**Two runners.** Each keeps its own log, its own arrangement of days, and its own
+character. The "Both of you" panel on the Plan tab shows where you each stand.
 
-**Log any day, not just today.** Tap any day in the week strip or anywhere in the
-full 12-week table to log or backfill it.
+**Log any day, not just today.** Step through days with the arrows on the Log
+tab, or tap any day in the week strip or the full plan table.
 
 **Move workouts between days.** Life doesn't always match the grid. Select a day
 and use **Move this to** to swap that workout onto another day of the same week —
