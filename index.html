@@ -851,45 +851,54 @@ button.row:hover { background: var(--sunken); }
 
 .logger .spacer { margin-left: auto; }
 
-/* ---- move a workout to another day ------------------------------- */
+/* ---- reshaping a week -------------------------------------------- */
 
-.swap {
+.hint-tight { margin-top: 0; margin-bottom: 14px; }
+
+.erow {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 5px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px dashed var(--line);
-}
-.swap-label {
+  gap: 10px;
+  padding: 8px 2px;
+  border-bottom: 1px solid var(--line);
   font-family: var(--f-round);
-  font-size: 10.5px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin-right: 4px;
 }
-.day-btn {
+.erow:last-child { border-bottom: 0; }
+.erow-day { font-size: 13px; font-weight: 700; color: var(--ink-2); width: 46px; flex: 0 0 auto; }
+.erow-date { font-size: 11.5px; color: var(--ink-3); width: 52px; flex: 0 0 auto; }
+.erow.today .erow-day { color: var(--accent); }
+.erow-mi {
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+  width: 60px;
+  text-align: right;
+  flex: 0 0 auto;
+}
+.erow.met .erow-mi { color: var(--mint); font-weight: 700; }
+
+.erow-sel {
+  flex: 1;
+  min-width: 0;
   appearance: none;
   font-family: var(--f-round);
-  font-size: 11.5px;
-  padding: 8px 11px;
-  border-radius: 99px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  background-color: var(--ground);
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+  background-position: calc(100% - 15px) calc(50% + 1px), calc(100% - 10px) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
   border: 1.5px solid var(--line-2);
-  background: var(--ground);
-  color: var(--ink-2);
+  border-radius: 99px;
+  padding: 9px 30px 9px 14px;
   cursor: pointer;
-  transition: background .14s, color .14s, border-color .14s;
+  transition: border-color .14s, background-color .14s;
 }
-.day-btn:hover:not(:disabled) { background: var(--sunken); color: var(--ink); border-color: var(--ink-3); }
-.day-btn.is-here {
-  background: var(--sunken);
-  border-color: var(--line-2);
-  color: var(--ink-3);
-  cursor: default;
-}
-.swap .btn-quiet { margin-left: auto; font-size: 11px; padding: 7px 9px; }
+.erow-sel:hover { border-color: var(--pop); }
+.erow-sel:focus { outline: none; border-color: var(--pop); box-shadow: 0 0 0 3px color-mix(in srgb, var(--pop) 18%, transparent); }
+.erow.rest .erow-sel { color: var(--ink-3); font-weight: 400; }
 
 /* ---- week strip -------------------------------------------------- */
 
@@ -1194,12 +1203,15 @@ textarea.sync {
         <div class="strip" id="strip"></div>
 
         <div class="picked" id="picked"></div>
-        <div class="swap" id="swap"></div>
       </section>
 
       <section class="card">
-        <p class="eyebrow">Day by day</p>
-        <div id="weeklist"></div>
+        <div class="strip-head">
+          <p class="eyebrow">Which days you run</p>
+          <button class="btn btn-quiet" id="wk-reset">Reset week</button>
+        </div>
+        <p class="hint hint-tight" id="edit-note"></p>
+        <div id="weekedit"></div>
       </section>
 
     </section>
@@ -1687,7 +1699,7 @@ textarea.sync {
     renderAllMeter(opts);
 
     if (view === "log")  { renderDay(); renderJournal(); }
-    if (view === "week") { renderStrip(); renderPicked(); renderSwap(); renderWeekList(); }
+    if (view === "week") { renderStrip(); renderPicked(); renderWeekEdit(); }
     if (view === "plan") { renderVersus(); renderTable(); renderSetup(); }
   }
 
@@ -1887,30 +1899,6 @@ textarea.sync {
     });
   }
 
-  /* --- the week's day-by-day ------------------------------------------ */
-
-  function renderWeekList() {
-    var r = me();
-    var box = document.getElementById("weeklist");
-    box.innerHTML = "";
-    PLAN[viewWeek].forEach(function (_x, d) {
-      var e = entryAt(r, viewWeek, d);
-      var goal = goalOf(e), mi = milesFor(r, viewWeek, d);
-      var met = goal > 0 ? mi >= goal : doneFor(r, viewWeek, d);
-      var when = dateOf(viewWeek, d);
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "row" + (met ? " met" : "") + (goal === 0 ? " rest" : "") +
-                    (isToday(viewWeek, d) ? " today" : "");
-      b.innerHTML =
-        '<span class="row-when">' + LONG[d].slice(0, 3) + " " + MONTH[when.getMonth()] + " " + when.getDate() + "</span>" +
-        '<span class="row-what">' + labelOf(e) + "</span>" +
-        '<span class="row-mi">' + (goal > 0 ? fmt(mi) + " / " + fmt(goal) : met ? "✓" : "—") + "</span>";
-      b.onclick = function () { selDay = d; go("log"); };
-      box.appendChild(b);
-    });
-  }
-
   /* --- the selected day, on the week screen ---------------------------- */
 
   function renderPicked() {
@@ -2069,8 +2057,6 @@ textarea.sync {
       }
     }
 
-    renderSwap();
-
     if (logged > 0 || done) {
       var clr = document.createElement("button");
       clr.className = "btn btn-quiet spacer";
@@ -2085,53 +2071,88 @@ textarea.sync {
     }
   }
 
-  /* Move a workout onto a different day of the same week. Miles already logged
-     stay on the date they were run — only the plan moves. */
-  function renderSwap() {
+  /* Reshape a week: each day gets a picker holding whatever that week's seven
+     workouts are, so you can put the runs on the days you're actually home.
+     Choosing a workout swaps it in from wherever it currently sits, which keeps
+     the week's mileage identical no matter how it's arranged. Miles already
+     logged stay on the date they were run — only the plan moves. */
+  function renderWeekEdit() {
     var r = me();
-    var box = document.getElementById("swap");
-    box.innerHTML = "";
     var n = PLAN[viewWeek].length;
-    if (n < 2) return;
+    var order = orderOf(r, viewWeek);
 
-    var lab = document.createElement("span");
-    lab.className = "swap-label";
-    lab.textContent = "Move this to";
-    box.appendChild(lab);
+    var runs = 0;
+    for (var i = 0; i < n; i++) if (goalOf(PLAN[viewWeek][i]) > 0) runs++;
+    document.getElementById("edit-note").textContent =
+      runs + " run day" + (runs === 1 ? "" : "s") + " and " + (n - runs) + " rest day" +
+      (n - runs === 1 ? "" : "s") + " this week. Change a day to move that run onto it." +
+      (isShuffled(r, viewWeek) ? " (rearranged)" : "");
 
-    for (var d = 0; d < n; d++) {
-      (function (d) {
-        var b = document.createElement("button");
-        b.type = "button";
-        b.className = "day-btn" + (d === selDay ? " is-here" : "");
-        b.textContent = DAYS[d];
-        b.disabled = d === selDay;
-        b.title = d === selDay ? "Already here"
-                : "Swap with " + labelOf(entryAt(r, viewWeek, d));
-        b.onclick = function () {
-          swapDays(r, viewWeek, selDay, d);
-          selDay = d;                     /* follow the workout to its new day */
+    /* One option per distinct workout — the three rest days are interchangeable,
+       so listing "Rest" three times would only be noise. */
+    var seen = {}, options = [];
+    PLAN[viewWeek].forEach(function (e, j) {
+      var label = labelOf(e);
+      if (seen[label]) return;
+      seen[label] = 1;
+      options.push({ label: label, j: j });
+    });
+
+    var box = document.getElementById("weekedit");
+    box.innerHTML = "";
+
+    for (var slot = 0; slot < n; slot++) {
+      (function (slot) {
+        var e = entryAt(r, viewWeek, slot);
+        var goal = goalOf(e), mi = milesFor(r, viewWeek, slot);
+        var met = goal > 0 ? mi >= goal : doneFor(r, viewWeek, slot);
+        var when = dateOf(viewWeek, slot);
+
+        var row = document.createElement("div");
+        row.className = "erow" + (goal === 0 ? " rest" : "") + (met ? " met" : "") +
+                        (isToday(viewWeek, slot) ? " today" : "");
+
+        var sel = document.createElement("select");
+        sel.className = "erow-sel";
+        sel.setAttribute("aria-label", LONG[slot] + " workout");
+        var here = labelOf(e);
+        options.forEach(function (o) {
+          var op = document.createElement("option");
+          op.value = o.j;
+          op.textContent = o.label;
+          if (o.label === here) op.selected = true;
+          sel.appendChild(op);
+        });
+        sel.onchange = function () {
+          var want = labelOf(PLAN[viewWeek][+sel.value]);
+          if (want === labelOf(entryAt(me(), viewWeek, slot))) return;
+          var o = orderOf(me(), viewWeek);
+          for (var k = 0; k < o.length; k++) {          /* find a matching workout elsewhere */
+            if (k !== slot && labelOf(PLAN[viewWeek][o[k]]) === want) {
+              swapDays(me(), viewWeek, slot, k);
+              break;
+            }
+          }
           save();
           render();
         };
-        box.appendChild(b);
-      })(d);
-    }
 
-    if (isShuffled(r, viewWeek)) {
-      var undo = document.createElement("button");
-      undo.className = "btn btn-quiet";
-      undo.textContent = "Reset week";
-      undo.onclick = function () {
-        if (r.order) delete r.order[viewWeek];
-        save();
-        render();
-      };
-      box.appendChild(undo);
+        row.innerHTML =
+          '<span class="erow-day">' + DAYS[slot] + "</span>" +
+          '<span class="erow-date">' + MONTH[when.getMonth()] + " " + when.getDate() + "</span>";
+        row.appendChild(sel);
+
+        var mis = document.createElement("span");
+        mis.className = "erow-mi";
+        mis.textContent = goal > 0 ? fmt(mi) + " / " + fmt(goal) : met ? "✓" : "";
+        row.appendChild(mis);
+
+        box.appendChild(row);
+      })(slot);
     }
   }
 
-  /* --- writes + celebration ---------------------------------------- */
+  /* --- writes + celebration ---------------------------------------- */  /* --- writes + celebration ---------------------------------------- */
 
   function commit(miles) {
     miles = Math.max(0, Math.min(99, Math.round(miles * 100) / 100));
@@ -2345,6 +2366,13 @@ textarea.sync {
     S.active = null;
     save();
     go("home");
+  };
+
+  document.getElementById("wk-reset").onclick = function () {
+    var r = me();
+    if (r.order) delete r.order[viewWeek];
+    save();
+    render();
   };
 
   document.getElementById("day-prev").onclick  = function () { stepDay(-1); };

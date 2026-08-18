@@ -20,7 +20,7 @@ Three tabs along the bottom:
 | Tab | What's on it |
 | --- | --- |
 | **Log** | Today's mileage bar *and* the whole-plan bar, the day you're logging, and the journal |
-| **Week** | This week's mileage bar, the seven-day strip, moving workouts between days, and a day-by-day breakdown |
+| **Week** | This week's mileage bar, the seven-day strip, and an editor for which days you run |
 | **Plan** | Overall progress across all 12 weeks, both runners side by side, the full plan table, and setup |
 
 The three tracker bars — today, this week, all 12 weeks — are spread across the
@@ -69,16 +69,20 @@ character. The "Both of you" panel on the Plan tab shows where you each stand.
 **Log any day, not just today.** Step through days with the arrows on the Log
 tab, or tap any day in the week strip or the full plan table.
 
-**Move workouts between days.** Life doesn't always match the grid. Select a day
-and use **Move this to** to swap that workout onto another day of the same week —
-long run to Saturday, rest day to Friday, whatever you need. A few things worth
-knowing:
+**Reshape any week around your life.** The Week tab's **Which days you run**
+section lists all seven days, each with a picker holding that week's workouts.
+Travelling Friday to Sunday? Set Monday to the 3-miler and Thursday to the long
+run, and the rest days move to the days you're away. A few things worth knowing:
 
-- Swapping never changes the week's total, since it's the same workouts reordered
+- Choosing a workout for a day swaps it in from wherever it currently sits, so
+  the week's mileage is identical however you arrange it
 - Miles you've already logged stay on the date you actually ran them; only the
   plan moves
-- Each of you can rearrange independently — Kylie's shuffle doesn't touch Caleb's
-- A rearranged week is labelled as such, and **Reset week** puts it back
+- Identical workouts are listed once — the three rest days are interchangeable,
+  so the picker doesn't repeat them
+- Each of you rearranges independently; Kylie's travel week doesn't touch Caleb's
+- A rearranged week is labelled as such, and **Reset week** puts it back to
+  Higdon's shape without touching anything you've logged
 
 ## The plan
 
