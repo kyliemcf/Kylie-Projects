@@ -8,6 +8,36 @@ It's a single self-contained `index.html`. No build step, no server, no account.
 Open the file (or the published link) in any browser, add it to your phone's home
 screen, and it behaves like an app.
 
+## Putting it on the web
+
+The repo is public and `index.html` sits at the root, so **GitHub Pages** serves
+it as-is — no build step, no hosting bill.
+
+1. Go to **Settings → Pages** in this repo
+2. Under *Build and deployment*, set **Source** to *Deploy from a branch*
+3. Pick the branch `claude/half-marathon-training-app-m0xi78` (already the
+   default) and folder **/ (root)**, then **Save**
+
+A minute later it's live at:
+
+> **https://kyliemcf.github.io/Kylie-Projects/**
+
+Every later push to that branch redeploys automatically.
+
+Once it's on a real URL, both phones can **Add to Home Screen** and it opens
+fullscreen with its own icon — no browser chrome — via `manifest.webmanifest`
+and the icons in this repo.
+
+**Sharing the link does not share your data.** Everything lives in each browser's
+local storage, so Caleb opening the URL gets his own empty copy on his own phone.
+That's the privacy trade-off of having no server. To put your histories on one
+device, use the **Copy code / Load** pair in Setup & sync. Genuinely shared,
+always-live data would need a backend this deliberately doesn't have.
+
+If you'd rather not use GitHub Pages, the whole site is static files — drag this
+folder onto [Netlify Drop](https://app.netlify.com/drop) or Cloudflare Pages and
+you'll get a URL just as quickly.
+
 ## Screens
 
 It opens on a **home screen** asking who's running today. Pick Kylie or Caleb —
