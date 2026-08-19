@@ -116,13 +116,24 @@ Source: <https://www.halhigdon.com/training-programs/half-marathon-training/novi
 
 ## The look
 
-The wordmark stacks **Pace / Ourselves.** over two lines and ends on a pink full
-stop; the 13.1 moves into the subtitle with the rest of the plan details.
+A training instrument that still has a pulse. Hairline borders and a disciplined
+neutral scale carry the layout; a single rose accent is spent only where it means
+something — progress fill, the figure you're chasing, today's date. Green is
+reserved for completion, amber for race days, so colour always says something.
 
-Strawberry and mint: blush grounds, a plum ink that's friendlier than black,
-strawberry-pink progress bars and a mint pay-off when a goal lands. Everything is
-set in a rounded typeface and generously curved. Both light and dark themes are
-designed — dark is a soft plum rather than a straight inversion.
+**Every number is set in a tabular monospace** while the interface text is a
+system sans. Columns of miles line up down the plan table, figures don't jitter
+as they tick over, and the whole thing reads like a log book rather than a
+dashboard.
+
+Radii are a scale — 6 / 10 / 14 — with full pills reserved for the tab bar and
+status tags, so roundness signals something instead of being everywhere at once.
+
+The wordmark stacks **Pace / Ourselves.** over two lines and ends on a rose full
+stop; the 13.1 sits in the subtitle with the rest of the plan details.
+
+Both themes are designed rather than inverted: light is a cool paper white with
+white cards, dark is a near-black with lifted surfaces and brighter accents.
 
 ## Setup
 
