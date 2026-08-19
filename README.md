@@ -135,6 +135,21 @@ stop; the 13.1 sits in the subtitle with the rest of the plan details.
 Both themes are designed rather than inverted: light is a cool paper white with
 white cards, dark is a near-black with lifted surfaces and brighter accents.
 
+**Switching themes.** The round button — top right on the home screen, and in the
+top bar once you're signed in — cycles through three states:
+
+| Icon | Mode | Behaviour |
+| --- | --- | --- |
+| ◑ | System | Follows whatever your phone is set to, and changes with it |
+| ☀ | Light | Stays light even if your phone is dark |
+| ☾ | Dark | Stays dark even if your phone is light |
+
+Your choice is remembered per device and applied before the page paints, so
+there's no flash of the wrong theme on load. It's deliberately kept out of the
+sync code — which phone is dark is a property of the phone, not of anyone's
+training, so copying your history across won't drag your theme with it. Native
+controls (the date picker, the day dropdowns, scrollbars) follow the choice too.
+
 ## Setup
 
 Open **Setup & sync** at the bottom.

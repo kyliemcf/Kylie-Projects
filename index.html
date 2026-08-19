@@ -48,7 +48,11 @@
   --r-md: 10px;
   --r-lg: 14px;
   --pad:  clamp(16px, 4vw, 24px);
+
+  color-scheme: light dark;
 }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -259,6 +263,29 @@ table.plan, .vs-row .v, .stepper input {
 }
 .pick-bar i { display: block; height: 100%; background: var(--accent-fill); border-radius: 99px; }
 .home-foot { font-size: 12px; color: var(--ink-3); margin: 22px 0 0; }
+
+/* ---- theme control ----------------------------------------------- */
+
+.theme-btn {
+  appearance: none;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  border-radius: 99px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.theme-btn:hover { color: var(--ink); border-color: var(--line-2); background: var(--raised); }
+.theme-btn svg { width: 15px; height: 15px; display: block; }
+
+.home-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 
 /* ---- app shell --------------------------------------------------- */
 
@@ -984,10 +1011,23 @@ textarea.sync {
 }
 </style>
 
+<script>
+/* Runs before anything paints so a chosen theme never flashes the other one. */
+(function () {
+  try {
+    var t = localStorage.getItem("pace-ourselves-theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+})();
+</script>
+
 <!-- ============ HOME · who's logging in ============ -->
 <section class="home" id="home">
   <div class="home-card">
-    <h1 class="wordmark">Pace<br>Ourselves<span>.</span></h1>
+    <div class="home-top">
+      <h1 class="wordmark">Pace<br>Ourselves<span>.</span></h1>
+      <button class="theme-btn" id="theme-home" type="button"></button>
+    </div>
     <p class="plan-name">13.1 miles · Hal Higdon Novice 1 · 12 weeks</p>
     <p class="home-count" id="home-count"></p>
 
@@ -1008,6 +1048,7 @@ textarea.sync {
       <span class="who-swap">switch</span>
     </button>
     <span class="countdown" id="countdown"></span>
+    <button class="theme-btn" id="theme-top" type="button"></button>
   </header>
 
   <main class="wrap">
@@ -1854,6 +1895,59 @@ textarea.sync {
     }, 1600);
   };
   jrNote.onblur = function () { render(); };
+
+  /* --- theme ----------------------------------------------------------- */
+
+  /* Three states: follow the device, or pin light or dark. Kept out of the
+     runners' saved data — which phone is dark is a property of the phone, not
+     of anyone's training, so it must not ride along in the sync code. */
+  var THEME_KEY = "pace-ourselves-theme";
+  var THEMES = ["system", "light", "dark"];
+
+  var ICONS = {
+    light: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">' +
+             '<circle cx="8" cy="8" r="3.1"/><path d="M8 1v1.6M8 13.4V15M15 8h-1.6M2.6 8H1M12.9 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1M12.9 12.9l-1.1-1.1M4.2 4.2L3.1 3.1"/></svg>',
+    dark:  '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">' +
+             '<path d="M13.4 10.3A5.9 5.9 0 0 1 5.7 2.6a6.2 6.2 0 1 0 7.7 7.7z"/></svg>',
+    system:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">' +
+             '<circle cx="8" cy="8" r="5.6"/><path d="M8 2.4a5.6 5.6 0 0 1 0 11.2z" fill="currentColor" stroke="none"/></svg>'
+  };
+  var THEME_TITLE = {
+    system: "Theme: matching your device",
+    light:  "Theme: light",
+    dark:   "Theme: dark"
+  };
+
+  function currentTheme() {
+    try {
+      var t = localStorage.getItem(THEME_KEY);
+      return THEMES.indexOf(t) > -1 ? t : "system";
+    } catch (e) { return "system"; }
+  }
+
+  function applyTheme(t) {
+    if (t === "system") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", t);
+    try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+    renderTheme();
+  }
+
+  function renderTheme() {
+    var t = currentTheme();
+    Array.prototype.forEach.call(document.querySelectorAll(".theme-btn"), function (b) {
+      b.innerHTML = ICONS[t];
+      b.title = THEME_TITLE[t];
+      b.setAttribute("aria-label", THEME_TITLE[t] + ". Tap to change.");
+    });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".theme-btn"), function (b) {
+    b.onclick = function () {
+      applyTheme(THEMES[(THEMES.indexOf(currentTheme()) + 1) % THEMES.length]);
+    };
+  });
+
+  renderTheme();
 
   /* --- navigation ------------------------------------------------------ */
 
