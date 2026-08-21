@@ -99,6 +99,28 @@ character. The "Both of you" panel on the Plan tab shows where you each stand.
 **Log any day, not just today.** Step through days with the arrows on the Log
 tab, or tap any day in the week strip or the full plan table.
 
+**Missed miles roll forward.** Fall short on a run day and the shortfall lands on
+the next run still to come that week, with a banner on the day card spelling it
+out: *+5 mi carried from miles missed earlier this week — today's 3 becomes 8.*
+The week strip shows the adjusted number with a small `+`.
+
+- **Surplus pays the debt down.** Running extra clears the carry instead of it
+  re-appearing tomorrow — the tally counts what you were owed *and* what you made
+  up, so a made-up run settles it
+- **The week's total never changes.** Carrying only redistributes miles inside a
+  week, so a 12-mile week is still 12 whether you spread it evenly or cram it
+- **It stops at the week boundary.** A blown week doesn't snowball into the next
+  one — a training week is the unit that matters, and this keeps one bad week
+  from poisoning the rest of the plan
+- **Only days that have passed count.** Today's run isn't missed until it is
+- Turn it off under **Setup & sync → Missed miles** and every day just asks for
+  its own mileage again
+
+Worth knowing: this can stack up fast. Miss a whole week and Sunday's 4-miler
+becomes a 12-miler, which is a bigger jump than a novice plan should ask for.
+The number is always shown before you run it — treat a large carry as a signal to
+let some of it go rather than a debt you must repay in one outing.
+
 **Reshape any week around your life.** The Week tab's **Which days you run**
 section lists all seven days, each with a picker holding that week's workouts.
 Travelling Friday to Sunday? Set Monday to the 3-miler and Thursday to the long

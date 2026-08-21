@@ -739,6 +739,44 @@ table.plan, .vs-row .v, .stepper input {
   border-top: 1px solid var(--line);
 }
 
+/* ---- carried miles ----------------------------------------------- */
+
+.carry {
+  /* Plain text flow — as a flex container the text nodes and <b> become
+     separate items and gap opens holes mid-sentence. */
+  display: block;
+  margin: 14px 0 0;
+  line-height: 1.5;
+  padding: 9px 12px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.carry b { font-family: var(--f-num); font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 600; }
+.chip.carried .chip-m::after {
+  content: "+";
+  font-size: 8px;
+  vertical-align: super;
+  color: var(--accent);
+  margin-left: 1px;
+}
+
+.check {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+  cursor: pointer;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+}
+.check input { width: 16px; height: 16px; accent-color: var(--accent-fill); cursor: pointer; }
+
 /* ---- journal ----------------------------------------------------- */
 
 .jr-prompt {
@@ -1105,6 +1143,7 @@ textarea.sync {
           </div>
           <span class="tag" id="d-tag"></span>
         </div>
+        <p class="carry" id="d-carry" hidden></p>
         <div class="logger" id="logger"></div>
         <div class="daynav">
           <button class="btn btn-quiet" id="day-prev" aria-label="Previous day">←</button>
@@ -1205,6 +1244,10 @@ textarea.sync {
             <input type="date" id="in-race">
           </div>
           <p class="hint" id="start-note"></p>
+          <div class="field">
+            <label for="in-carry">Missed miles</label>
+            <label class="check"><input type="checkbox" id="in-carry"> Add them to the next run that week</label>
+          </div>
           <div class="field">
             <label for="in-n1">Runner 1</label>
             <input type="text" id="in-n1" maxlength="24" autocomplete="off">
@@ -1348,6 +1391,7 @@ textarea.sync {
   function freshState() {
     return {
       race: DEFAULT_RACE,
+      carry: true,
       active: null,          /* nobody signed in yet */
       runners: [blankRunner("Kylie"), blankRunner("Caleb")]
     };
@@ -1369,6 +1413,7 @@ textarea.sync {
         if (!r.order) r.order = {};
       });
       if (!s.race) s.race = DEFAULT_RACE;
+      if (typeof s.carry !== "boolean") s.carry = true;
       s.active = s.active === 0 || s.active === 1 ? s.active : null;
       return s;
     } catch (e) {
@@ -1406,6 +1451,37 @@ textarea.sync {
     o[a] = o[b]; o[b] = t;
     r.order = r.order || {};
     r.order[w] = o;
+  }
+
+  /* Missed miles roll forward. When a run day passes short, the shortfall lands
+     on the next run still to come that week.
+
+     Deficit and surplus are both counted, so running extra clears the carry
+     instead of it re-appearing the next day; and because the week's goals are
+     untouched, this only redistributes miles inside a week — the weekly and
+     overall totals never move. Kept to the current week on purpose: a training
+     week is the unit that matters, and it stops a bad week snowballing across
+     the whole plan. */
+  function carryDay(r, w) {
+    if (S.carry === false) return -1;
+    var t = todaySlot();
+    if (t.p.before || t.p.after || w !== t.w) return -1;
+    for (var d = t.d; d < PLAN[w].length; d++) {
+      if (goalOf(entryAt(r, w, d)) > 0) return d;
+    }
+    return -1;                                   /* no runs left this week */
+  }
+
+  function carryFor(r, w, d) {
+    if (d !== carryDay(r, w)) return 0;
+    var owed = 0;
+    for (var i = 0; i < d; i++) owed += goalOf(entryAt(r, w, i)) - milesFor(r, w, i);
+    return owed > 0.005 ? Math.round(owed * 100) / 100 : 0;
+  }
+
+  /* What this day actually asks of you: its own miles plus anything carried. */
+  function targetFor(r, w, d) {
+    return goalOf(entryAt(r, w, d)) + carryFor(r, w, d);
   }
 
   function totalMiles(r) {
@@ -1734,17 +1810,19 @@ textarea.sync {
   function renderDayMeter(opts) {
     var r = me(), t = todaySlot();
     var e = entryAt(r, t.w, t.d);
-    var goal = goalOf(e), done = milesFor(r, t.w, t.d);
+    var goal = targetFor(r, t.w, t.d), done = milesFor(r, t.w, t.d);
     var ratio = goal > 0 ? done / goal : (doneFor(r, t.w, t.d) || done > 0 ? 1 : 0);
 
     bar("day", ratio, goal > 0 ? fmt(done) + '<span class="of"> / ' + fmt(goal) + " mi</span>"
                                : (ratio >= 1 ? "Done" : labelOf(e)));
     setRunner("day", goal === 0 ? (ratio >= 1 ? "done" : "rest")
                    : ratio >= 1 ? "done" : ratio > 0 ? "run" : "idle", opts.cheer === "day");
+    var carried = carryFor(r, t.w, t.d);
     meterNote("day",
       t.p.before ? "Plan starts " + MONTH[startDate().getMonth()] + " " + startDate().getDate() + "."
       : t.p.after ? "Plan finished. Every mile logged still counts."
-      : "<b>" + LONG[t.d] + "</b> · Week " + (t.w + 1) + " · " + labelOf(e));
+      : "<b>" + LONG[t.d] + "</b> · Week " + (t.w + 1) + " · " + labelOf(e) +
+        (carried > 0 ? " <b>+ " + fmt(carried) + " mi</b> carried" : ""));
   }
 
   function renderWeekMeter(opts) {
@@ -1829,7 +1907,7 @@ textarea.sync {
     }
 
     rows.reverse().forEach(function (row) {
-      var goal = goalOf(row.e);
+      var goal = targetFor(r, row.w, row.d);
       var met = goal > 0 ? row.mi >= goal : true;
       var b = document.createElement("button");
       b.type = "button";
@@ -1879,6 +1957,7 @@ textarea.sync {
       "Race day is a " + LONG[raceDow()] + ", so week 12 runs Monday to " + LONG[raceDow()] + ".";
     document.getElementById("total-note").textContent =
       fmt(TOTAL) + " miles between Week 1 Monday and the finish line.";
+    document.getElementById("in-carry").checked = S.carry !== false;
     document.getElementById("in-n1").value = S.runners[0].name;
     document.getElementById("in-n2").value = S.runners[1].name;
   }
@@ -1994,7 +2073,8 @@ textarea.sync {
     var r = me();
     var e = entryAt(r, viewWeek, selDay);
     var d = dateOf(viewWeek, selDay);
-    var goal = goalOf(e);
+    var goal = targetFor(r, viewWeek, selDay);
+    var carried = carryFor(r, viewWeek, selDay);
     var logged = milesFor(r, viewWeek, selDay);
     var done = doneFor(r, viewWeek, selDay);
 
@@ -2008,6 +2088,16 @@ textarea.sync {
     var k = kindOf(e);
     tag.className = "tag tag-" + k;
     tag.textContent = k === "race" ? "Race" : k === "rest" ? "Recover" : "Run";
+
+    var note = document.getElementById("d-carry");
+    if (carried > 0) {
+      note.hidden = false;
+      note.innerHTML = "<b>+" + fmt(carried) + " mi</b> carried from miles missed earlier this week — " +
+                       "today's " + fmt(goalOf(e)) + " becomes <b>" + fmt(goal) + "</b>.";
+    } else {
+      note.hidden = true;
+      note.innerHTML = "";
+    }
 
     var box = document.getElementById("logger");
     box.innerHTML = "";
@@ -2110,7 +2200,7 @@ textarea.sync {
     for (var slot = 0; slot < n; slot++) {
       (function (slot) {
         var e = entryAt(r, viewWeek, slot);
-        var goal = goalOf(e), mi = milesFor(r, viewWeek, slot);
+        var goal = targetFor(r, viewWeek, slot), mi = milesFor(r, viewWeek, slot);
         var met = goal > 0 ? mi >= goal : doneFor(r, viewWeek, slot);
         var when = dateOf(viewWeek, slot);
 
@@ -2197,7 +2287,7 @@ textarea.sync {
      including after clearing and re-logging — but never on page load, since
      only writes call this. */
   function goalState(r) {
-    var e = entryAt(r, viewWeek, selDay), goal = goalOf(e);
+    var e = entryAt(r, viewWeek, selDay), goal = targetFor(r, viewWeek, selDay);
     return {
       day:  goal > 0 && milesFor(r, viewWeek, selDay) >= goal,
       week: weekGoal(viewWeek) > 0 && weekMiles(r, viewWeek) >= weekGoal(viewWeek),
@@ -2247,7 +2337,7 @@ textarea.sync {
 
     PLAN[viewWeek].forEach(function (_ignored, d) {
       var e = entryAt(r, viewWeek, d);
-      var goal = goalOf(e);
+      var goal = targetFor(r, viewWeek, d);
       var mi = milesFor(r, viewWeek, d);
       var done = doneFor(r, viewWeek, d);
       var met = goal > 0 ? mi >= goal : done;
@@ -2255,11 +2345,12 @@ textarea.sync {
       var b = document.createElement("button");
       b.type = "button";
       b.className = "chip" + (met ? " met" : (mi > 0 || done) ? " partial" : "") +
-                    (d === selDay ? " sel" : "") + (isToday(viewWeek, d) ? " today" : "");
+                    (d === selDay ? " sel" : "") + (isToday(viewWeek, d) ? " today" : "") +
+                    (carryFor(r, viewWeek, d) > 0 ? " carried" : "");
       b.setAttribute("data-kind", kindOf(e));
       b.innerHTML =
         '<span class="chip-d">' + DAYS[d] + "</span>" +
-        '<span class="chip-m">' + shortOf(e) + "</span>" +
+        '<span class="chip-m">' + (goal > 0 ? fmt(goal) : shortOf(e)) + "</span>" +
         '<span class="chip-sub">' + (mi > 0 ? fmt(mi) + " mi" : goal > 0 ? "mi" : "&nbsp;") + "</span>" +
         '<span class="dot"></span>';
       b.onclick = function () { selDay = d; render(); };
@@ -2306,7 +2397,7 @@ textarea.sync {
       body += "<td class='wk'>" + (w + 1) + "</td>";
       week.forEach(function (_ignored, d) {
         var e = entryAt(r, w, d);
-        var goal = goalOf(e);
+        var goal = targetFor(r, w, d);
         var mi = milesFor(r, w, d);
         var met = goal > 0 ? mi >= goal : doneFor(r, w, d);
         body += "<td class='d " + kindOf(e) + (met ? " met" : "") + "' data-w='" + w + "' data-d='" + d + "'>" +
@@ -2394,6 +2485,12 @@ textarea.sync {
   document.getElementById("wk-today").onclick = function () {
     var t = todaySlot();
     viewWeek = t.w; selDay = t.d;
+    render();
+  };
+
+  document.getElementById("in-carry").onchange = function (ev) {
+    S.carry = !!ev.target.checked;
+    save();
     render();
   };
 
